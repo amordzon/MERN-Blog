@@ -26,7 +26,7 @@ mongoose.connect(
     }
 );
 
-app.use('/api/', postRouter);
+app.use('/api/posts', postRouter);
 app.listen(process.env.PORT, () => {
     console.log(`Our server is running on port ${process.env.PORT}`);
 });

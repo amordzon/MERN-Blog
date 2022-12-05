@@ -1,13 +1,13 @@
 import mongoose from 'mongoose';
-import Post from '../models/post.model.js';
+import User from '../models/user.model.js';
 
-export const getAllPosts = (req, res) => {
-    Post.find()
-        .then((allPosts) => {
+export const getAllUsers = (req, res) => {
+    User.find()
+        .then((allUsers) => {
             return res.status(200).json({
                 success: true,
-                message: 'All posts',
-                Posts: allPosts,
+                message: 'All users',
+                User: allUsers,
             });
         })
         .catch((err) => {
@@ -19,41 +19,43 @@ export const getAllPosts = (req, res) => {
         });
 };
 
-export const getOnePost = (req, res) => {
-    const id = req.params.postid;
-    Post.findById(id)
-        .then((singlePost) => {
+export const getOneUser = (req, res) => {
+    const id = req.params.userid;
+    User.findById(id)
+        .then((singleUser) => {
             res.status(200).json({
                 success: true,
-                message: 'Single Post',
-                Post: singlePost,
+                message: 'Single User',
+                User: singleUser,
             });
         })
         .catch((err) => {
             res.status(500).json({
                 success: false,
-                message: 'This post does not exist',
+                message: 'This user does not exist',
                 error: err.message,
             });
         });
 };
 
-export const createPost = (req, res) => {
-    const post = new Post({
+export const createUser = (req, res) => {
+    const user = new User({
         _id: mongoose.Types.ObjectId(),
-        user_id: req.body.user_id,
-        title: req.body.title,
-        body: req.body.body,
-        category_id: req.body.category_id,
-        published_at: req.body.published_at,
+        username: req.body.username,
+        password: req.body.password,
+        email: req.body.email,
+        name: req.body.name,
+        surname: req.body.surname,
+        role: req.body.role,
+        created_at: req.body.created_at,
     });
-    return post
+    return user
         .save()
-        .then((newPost) => {
+        .then((newUser) => {
             return res.status(201).json({
                 success: true,
-                message: 'New post created successfully',
-                Post: newPost,
+                message: 'New user created successfully',
+                User: newUser,
             });
         })
         .catch((error) => {
@@ -65,16 +67,16 @@ export const createPost = (req, res) => {
         });
 };
 
-export const updatePost = (req, res) => {
-    const id = req.params.postid;
+export const updateUser = (req, res) => {
+    const id = req.params.userid;
     const updateObject = req.body;
-    Post.update({ _id: id }, { $set: updateObject })
+    User.update({ _id: id }, { $set: updateObject })
         .exec()
         .then(() => {
             res.status(200).json({
                 success: true,
-                message: 'Post is updated',
-                updatePost: updateObject,
+                message: 'User is updated',
+                updateUser: updateObject,
             });
         })
         .catch((err) => {
@@ -85,9 +87,9 @@ export const updatePost = (req, res) => {
         });
 };
 
-export const deletePost = (req, res) => {
-    const id = req.params.postid;
-    Post.findByIdAndRemove(id)
+export const deleteUser = (req, res) => {
+    const id = req.params.userid;
+    User.findByIdAndRemove(id)
         .exec()
         .then(() =>
             res.status(204).json({

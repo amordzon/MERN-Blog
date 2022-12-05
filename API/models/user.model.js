@@ -17,6 +17,7 @@ const UserSchema = new mongoose.Schema({
         type: Date,
         required: true,
     },
+    refresh_token: { type: String },
 });
 
 export default mongoose.model('User', UserSchema);

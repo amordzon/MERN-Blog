@@ -1,8 +1,9 @@
 import mongoose from 'mongoose';
 import User from '../models/user.model.js';
+import bcrypt from 'bcrypt';
 
-export const getAllUsers = (req, res) => {
-    User.find()
+export const getAllUsers = async (req, res) => {
+    await User.find()
         .then((allUsers) => {
             return res.status(200).json({
                 success: true,
@@ -19,9 +20,9 @@ export const getAllUsers = (req, res) => {
         });
 };
 
-export const getOneUser = (req, res) => {
+export const getOneUser = async (req, res) => {
     const id = req.params.userid;
-    User.findById(id)
+    await User.findById(id)
         .then((singleUser) => {
             res.status(200).json({
                 success: true,
@@ -38,39 +39,46 @@ export const getOneUser = (req, res) => {
         });
 };
 
-export const createUser = (req, res) => {
-    const user = new User({
-        _id: mongoose.Types.ObjectId(),
-        username: req.body.username,
-        password: req.body.password,
-        email: req.body.email,
-        name: req.body.name,
-        surname: req.body.surname,
-        role: req.body.role,
-        created_at: req.body.created_at,
+export const createUser = async (req, res) => {
+    const hashedPwd = await bcrypt.hash(req.body.password, 10);
+    User.find({ email: req.body.email }, (err, users) => {
+        if (users.length) {
+            return res.sendStatus(409);
+        } else {
+            const user = new User({
+                _id: mongoose.Types.ObjectId(),
+                username: req.body.username,
+                password: hashedPwd,
+                email: req.body.email,
+                name: req.body.name,
+                surname: req.body.surname,
+                role: req.body.role,
+                created_at: req.body.created_at,
+            });
+            return user
+                .save()
+                .then((newUser) => {
+                    return res.status(201).json({
+                        success: true,
+                        message: 'New user created successfully',
+                        User: newUser,
+                    });
+                })
+                .catch((error) => {
+                    res.status(500).json({
+                        success: false,
+                        message: 'Server error. Please try again.',
+                        error: error.message,
+                    });
+                });
+        }
     });
-    return user
-        .save()
-        .then((newUser) => {
-            return res.status(201).json({
-                success: true,
-                message: 'New user created successfully',
-                User: newUser,
-            });
-        })
-        .catch((error) => {
-            res.status(500).json({
-                success: false,
-                message: 'Server error. Please try again.',
-                error: error.message,
-            });
-        });
 };
 
-export const updateUser = (req, res) => {
+export const updateUser = async (req, res) => {
     const id = req.params.userid;
     const updateObject = req.body;
-    User.update({ _id: id }, { $set: updateObject })
+    await User.update({ _id: id }, { $set: updateObject })
         .exec()
         .then(() => {
             res.status(200).json({
@@ -87,9 +95,9 @@ export const updateUser = (req, res) => {
         });
 };
 
-export const deleteUser = (req, res) => {
+export const deleteUser = async (req, res) => {
     const id = req.params.userid;
-    User.findByIdAndRemove(id)
+    await User.findByIdAndRemove(id)
         .exec()
         .then(() =>
             res.status(204).json({

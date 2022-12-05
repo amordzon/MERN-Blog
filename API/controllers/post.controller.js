@@ -1,8 +1,9 @@
 import mongoose from 'mongoose';
 import Post from '../models/post.model.js';
 
-export const getAllPosts = (req, res) => {
-    Post.find()
+export const getAllPosts = async (req, res) => {
+    await Post.find()
+        .populate('author')
         .then((allPosts) => {
             return res.status(200).json({
                 success: true,
@@ -19,9 +20,9 @@ export const getAllPosts = (req, res) => {
         });
 };
 
-export const getOnePost = (req, res) => {
+export const getOnePost = async (req, res) => {
     const id = req.params.postid;
-    Post.findById(id)
+    await Post.findById(id)
         .then((singlePost) => {
             res.status(200).json({
                 success: true,
@@ -41,10 +42,10 @@ export const getOnePost = (req, res) => {
 export const createPost = (req, res) => {
     const post = new Post({
         _id: mongoose.Types.ObjectId(),
-        user_id: req.body.user_id,
+        author: req.body.author,
         title: req.body.title,
         body: req.body.body,
-        category_id: req.body.category_id,
+        category: req.body.category,
         published_at: req.body.published_at,
     });
     return post
@@ -65,10 +66,10 @@ export const createPost = (req, res) => {
         });
 };
 
-export const updatePost = (req, res) => {
+export const updatePost = async (req, res) => {
     const id = req.params.postid;
     const updateObject = req.body;
-    Post.update({ _id: id }, { $set: updateObject })
+    await Post.update({ _id: id }, { $set: updateObject })
         .exec()
         .then(() => {
             res.status(200).json({
@@ -85,9 +86,9 @@ export const updatePost = (req, res) => {
         });
 };
 
-export const deletePost = (req, res) => {
+export const deletePost = async (req, res) => {
     const id = req.params.postid;
-    Post.findByIdAndRemove(id)
+    await Post.findByIdAndRemove(id)
         .exec()
         .then(() =>
             res.status(204).json({

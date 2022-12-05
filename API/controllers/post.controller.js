@@ -3,7 +3,7 @@ import Post from '../models/post.model.js';
 
 export const getAllPosts = async (req, res) => {
     await Post.find()
-        .populate('author')
+        .populate('author category')
         .then((allPosts) => {
             return res.status(200).json({
                 success: true,

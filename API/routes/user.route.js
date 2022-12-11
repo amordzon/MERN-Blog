@@ -6,10 +6,11 @@ import {
     updateUser,
     deleteUser,
 } from '../controllers/user.controller.js';
+import { adminAuth } from '../middleware/auth.middleware.js';
 
 const userRouter = express.Router();
 
-userRouter.get('/', getAllUsers);
+userRouter.get('/', [adminAuth], getAllUsers);
 userRouter.post('/new', createUser);
 userRouter.get('/:userid', getOneUser);
 userRouter.put('/:userid', updateUser);

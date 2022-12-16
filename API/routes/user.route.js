@@ -11,7 +11,7 @@ import { adminAuth } from '../middleware/auth.middleware.js';
 const userRouter = express.Router();
 
 userRouter.get('/', [adminAuth], getAllUsers);
-userRouter.post('/new', createUser);
+userRouter.post('/new', [adminAuth], createUser);
 userRouter.get('/:userid', getOneUser);
 userRouter.put('/:userid', updateUser);
 userRouter.delete('/:userid', deleteUser);

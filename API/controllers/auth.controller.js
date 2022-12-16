@@ -3,8 +3,7 @@ import bcrypt from 'bcrypt';
 import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
 
-const jwtSecret =
-    '4a84cdc69fccd13e2b4207a184c17f6cb7373af21e2d5d10562c693c0b780866a768e4';
+const jwtSecret = process.env.TOKEN_SECRET;
 
 export const Login = async (req, res) => {
     const email = req.body.email;

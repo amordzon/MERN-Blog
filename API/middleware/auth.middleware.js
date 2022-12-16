@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-const jwtSecret =
-    '4a84cdc69fccd13e2b4207a184c17f6cb7373af21e2d5d10562c693c0b780866a768e4';
+const jwtSecret = process.env.TOKEN_SECRET;
 
 export const adminAuth = (req, res, next) => {
     const token = req.cookies.jwt;
@@ -25,18 +24,14 @@ export const adminAuth = (req, res, next) => {
     }
 };
 
-export const userAuth = (req, res, next) => {
+export const loggedIn = (req, res, next) => {
     const token = req.cookies.jwt;
     if (token) {
         jwt.verify(token, jwtSecret, (err, decodedToken) => {
             if (err) {
                 return res.status(401).json({ message: 'Not authorized' });
             } else {
-                if (decodedToken.role !== 'normal') {
-                    return res.status(401).json({ message: 'Not authorized' });
-                } else {
-                    next();
-                }
+                next();
             }
         });
     } else {

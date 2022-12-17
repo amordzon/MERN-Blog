@@ -2,6 +2,7 @@ import React from 'react';
 
 const Navbar = () => {
     const [navbarOpen, setNavbarOpen] = React.useState(false);
+
     return (
         <nav className="bg-white border-gray-200 px-2 sm:px-4 py-2.5 rounded-b dark:bg-gray-900">
             <div className="container flex flex-wrap items-center justify-between mx-auto">
@@ -79,14 +80,6 @@ const Navbar = () => {
                                 Strona główna
                             </a>
                         </li>
-                        <li>
-                            <a
-                                href="#"
-                                className="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
-                            >
-                                Zwierzęta
-                            </a>
-                        </li>
 
                         <li>
                             <a
@@ -97,12 +90,12 @@ const Navbar = () => {
                             </a>
                         </li>
 
-                        <li className="md:hidden lg:block">
+                        <li>
                             <a
                                 href="#"
                                 className="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
                             >
-                                Styl
+                                Zwierzęta
                             </a>
                         </li>
 

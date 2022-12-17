@@ -2,21 +2,22 @@ import mongoose from 'mongoose';
 import Category from '../models/category.model.js';
 
 export const getAllCategories = async (req, res) => {
-    await Category.find()
-        .then((allCategories) => {
-            return res.status(200).json({
-                success: true,
-                message: 'All categories',
-                Categories: allCategories,
-            });
-        })
-        .catch((err) => {
-            res.status(500).json({
-                success: false,
-                message: 'Server error',
-                error: err.message,
-            });
+    try {
+        const categories = await Category.find()
+            .populate('posts')
+            .sort('posts');
+        return res.status(200).json({
+            success: true,
+            message: 'All categories',
+            Categories: categories,
         });
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            message: 'Server error',
+            error: err.message,
+        });
+    }
 };
 
 export const getOneCategory = async (req, res) => {

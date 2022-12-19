@@ -14,6 +14,14 @@ const PostSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        score: {
+            type: Number,
+            default: 0,
+        },
+        img: {
+            type: String,
+            required: true,
+        },
         category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' },
         published_at: {
             type: Date,

@@ -45,6 +45,7 @@ export const createPost = (req, res) => {
         author: req.body.author,
         title: req.body.title,
         body: req.body.body,
+        img: req.body.img,
         category: req.body.category,
         published_at: req.body.published_at,
     });

@@ -2,22 +2,45 @@ import mongoose from 'mongoose';
 import Post from '../models/post.model.js';
 
 export const getAllPosts = async (req, res) => {
-    await Post.find()
-        .populate('author category')
-        .then((allPosts) => {
-            return res.status(200).json({
-                success: true,
-                message: 'All posts',
-                Posts: allPosts,
+    const sortBy = req.query.sortBy;
+    const order = req.query.order;
+    const sort = { [sortBy]: parseInt(order) };
+    if (sortBy && order) {
+        await Post.find()
+            .populate('author category')
+            .sort(sort)
+            .then((allPosts) => {
+                return res.status(200).json({
+                    success: true,
+                    message: 'All posts',
+                    Posts: allPosts,
+                });
+            })
+            .catch((err) => {
+                res.status(500).json({
+                    success: false,
+                    message: 'Server error',
+                    error: err.message,
+                });
             });
-        })
-        .catch((err) => {
-            res.status(500).json({
-                success: false,
-                message: 'Server error',
-                error: err.message,
+    } else {
+        await Post.find()
+            .populate('author category')
+            .then((allPosts) => {
+                return res.status(200).json({
+                    success: true,
+                    message: 'All posts',
+                    Posts: allPosts,
+                });
+            })
+            .catch((err) => {
+                res.status(500).json({
+                    success: false,
+                    message: 'Server error',
+                    error: err.message,
+                });
             });
-        });
+    }
 };
 
 export const getOnePost = async (req, res) => {

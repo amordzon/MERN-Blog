@@ -13,7 +13,6 @@ const Posts = () => {
                 .then((response) => {
                     const allPosts = response.data.Posts;
                     setPosts(allPosts);
-                    console.log(allPosts);
                 })
                 .catch((error) => console.log(error));
         };

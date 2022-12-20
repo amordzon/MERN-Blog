@@ -3,8 +3,8 @@ import Post from '../models/post.model.js';
 
 export const getAllPosts = async (req, res) => {
     const sortBy = req.query.sortBy;
-    const order = req.query.order;
-    const sort = { [sortBy]: parseInt(order) };
+    const order = req.query.order == '1' ? 1 : -1;
+    const sort = { [sortBy]: order };
     if (sortBy && order) {
         await Post.find()
             .populate('author category')

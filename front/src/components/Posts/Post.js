@@ -39,7 +39,7 @@ const Post = ({ post }) => {
                     href="#"
                     className="inline-flex items-center font-medium text-primary-600 hover:underline"
                 >
-                    Czytaj dalej
+                    Read More
                 </a>
             </div>
         </article>

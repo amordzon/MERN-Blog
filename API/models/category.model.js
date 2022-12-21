@@ -9,6 +9,10 @@ const CategorySchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        slug: {
+            type: String,
+            required: true,
+        },
         description: {
             type: String,
             required: false,
@@ -18,14 +22,13 @@ const CategorySchema = new mongoose.Schema(
             required: true,
         },
     },
-    { toJSON: { virtuals: true } }
+    { toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
 
 CategorySchema.virtual('posts', {
     ref: 'Post',
     localField: '_id',
     foreignField: 'category',
-    count: true,
 });
 
 export default mongoose.model('Category', CategorySchema);

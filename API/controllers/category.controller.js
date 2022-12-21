@@ -21,8 +21,16 @@ export const getAllCategories = async (req, res) => {
 };
 
 export const getOneCategory = async (req, res) => {
-    const id = req.params.categoryid;
-    await Category.findById(id)
+    const slug = req.params.categoryslug;
+    await Category.findOne({ slug: slug })
+        .populate([
+            {
+                path: 'posts',
+                populate: {
+                    path: 'author category',
+                },
+            },
+        ])
         .then((singleCategory) => {
             res.status(200).json({
                 success: true,
@@ -47,6 +55,7 @@ export const createCategory = (req, res) => {
             const category = new Category({
                 _id: mongoose.Types.ObjectId(),
                 name: req.body.name,
+                slug: req.body.slug,
                 description: req.body.description,
                 created_at: req.body.created_at,
             });

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
     const [navbarOpen, setNavbarOpen] = React.useState(false);
@@ -6,11 +7,11 @@ const Navbar = () => {
     return (
         <nav className="sticky top-0 z-50 border-gray-200 px-2 sm:px-4 py-2.5 rounded-b bg-gray-900">
             <div className="container flex flex-wrap items-center justify-between mx-auto">
-                <a href="" className="flex items-center">
+                <Link to="/" className="flex items-center">
                     <span className="self-center text-xl font-semibold whitespace-nowrap text-white">
                         Blog
                     </span>
-                </a>
+                </Link>
                 <div className="flex md:order-2">
                     <button
                         type="button"
@@ -73,39 +74,39 @@ const Navbar = () => {
                     </div>
                     <ul className="flex flex-col p-4 mt-4 border rounded-lg md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white bg-gray-800 md:bg-gray-900 border-gray-700">
                         <li>
-                            <a
-                                href="#"
+                            <Link
+                                to="/"
                                 className="block py-2 pl-3 pr-4 bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 text-white"
                             >
-                                Strona główna
-                            </a>
+                                Home
+                            </Link>
                         </li>
 
                         <li>
-                            <a
-                                href="#"
+                            <Link
+                                to="/category/minerals"
                                 className="block py-2 pl-3 pr-4 rounded md:hover:bg-transparent md:p-0 text-gray-400 md:hover:text-white hover:bg-gray-700 hover:text-white md:hover:bg-transparent border-gray-700"
                             >
-                                Podróże
-                            </a>
+                                Minerals
+                            </Link>
                         </li>
 
                         <li>
-                            <a
-                                href="#"
+                            <Link
+                                to="/category/animals"
                                 className="block py-2 pl-3 pr-4 rounded md:hover:bg-transparent md:p-0 text-gray-400 md:hover:text-white hover:bg-gray-700 hover:text-white md:hover:bg-transparent border-gray-700"
                             >
-                                Zwierzęta
-                            </a>
+                                Animals
+                            </Link>
                         </li>
 
                         <li>
-                            <a
-                                href="#"
+                            <Link
+                                to="/others"
                                 className="block py-2 pl-3 pr-4 rounded md:hover:bg-transparent md:p-0 text-gray-400 md:hover:text-white hover:bg-gray-700 hover:text-white md:hover:bg-transparent border-gray-700"
                             >
-                                Inne
-                            </a>
+                                Others
+                            </Link>
                         </li>
                     </ul>
                 </div>

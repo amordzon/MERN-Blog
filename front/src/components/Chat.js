@@ -3,7 +3,7 @@ import React from 'react';
 const Chat = () => {
     return (
         <div className="mt-12 flex flex-col items-center justify-center w-full min-h-[32rem] lg:min-h-[24rem] xl:min-h-[28rem] bg-gray-100 text-gray-800 ">
-            <h1 className="font-semibold text-gray-800 ">CZAT ONLINE</h1>
+            <h1 className="font-semibold text-gray-800 ">CHAT ONLINE</h1>
             <div className="flex flex-col flex-grow w-full max-w-xl bg-white shadow-xl rounded-lg overflow-hidden">
                 <div className="flex flex-col flex-grow h-0 p-4 overflow-auto">
                     <div className="flex w-full mt-2 space-x-3 max-w-xs">

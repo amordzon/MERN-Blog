@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Summary from './Summary';
-import Posts from './Posts';
+import Posts from './Posts/Posts';
 import axios from 'axios';
 
 const HomePage = () => {

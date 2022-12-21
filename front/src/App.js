@@ -1,7 +1,7 @@
 import React from 'react';
 import Navbar from './components/Navbar';
 import AboutMe from './components/AboutMe';
-import Chat from './components/Chat';
+import Chat from './components/Chat/Chat';
 import PopularPosts from './components/PopularPosts';
 import PageRoutes from './PageRoutes';
 

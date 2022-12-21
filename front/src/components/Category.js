@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Summary from './Summary';
 import axios from 'axios';
-import Posts from './Posts';
+import Posts from './Posts/Posts';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const Category = () => {

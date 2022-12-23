@@ -45,15 +45,16 @@ export const createComment = (req, res) => {
         user: req.body.user,
         body: req.body.body,
         post: req.body.post,
-        created_at: req.body.created_at,
     });
     return comment
         .save()
         .then((newComment) => {
-            return res.status(201).json({
-                success: true,
-                message: 'New comment created successfully',
-                Comment: newComment,
+            Comment.populate(newComment, { path: 'user' }, (err, comment) => {
+                return res.status(201).json({
+                    success: true,
+                    message: 'New comment created successfully',
+                    Comment: comment,
+                });
             });
         })
         .catch((error) => {

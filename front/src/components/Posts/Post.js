@@ -1,6 +1,6 @@
 import React from 'react';
 import Moment from 'moment';
-
+import { Link } from 'react-router-dom';
 const Post = ({ post }) => {
     const truncate = (str) => {
         return str.length > 200 ? str.slice(0, 198) + '...' : str;
@@ -25,7 +25,7 @@ const Post = ({ post }) => {
             <img className="w-full max-h-[32rem] " src={post.img} />
 
             <h2 className="mb-2 mt-4 text-2xl font-bold tracking-tight text-gray-900">
-                <a href="#">{post.title}</a>
+                <Link to={`/post/${post._id}`}>{post.title}</Link>
             </h2>
             <p className="mb-5 font-light text-gray-500 ">
                 {truncate(post.body)}
@@ -33,14 +33,16 @@ const Post = ({ post }) => {
             <div className="flex justify-between items-center">
                 <div className="flex items-center space-x-4">
                     <div className="w-6 h-6 mx-auto bg-blue-500 rounded-full"></div>
-                    <span className="font-medium">{post.author.name}</span>
+                    <span className="font-medium">
+                        {post.author.name} {post.author.surname}
+                    </span>
                 </div>
-                <a
-                    href="#"
+                <Link
+                    to={`/post/${post._id}`}
                     className="inline-flex items-center font-medium text-primary-600 hover:underline"
                 >
                     Read More
-                </a>
+                </Link>
             </div>
         </article>
     );

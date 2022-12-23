@@ -23,12 +23,18 @@ const PostSchema = new mongoose.Schema(
             required: true,
         },
         category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' },
-        published_at: {
-            type: Date,
-            required: true,
-        },
     },
-    { collection: 'posts' }
+    {
+        timestamps: true,
+        toJSON: { virtuals: true },
+        toObject: { virtuals: true },
+    }
 );
+
+PostSchema.virtual('comments', {
+    ref: 'Comment',
+    localField: '_id',
+    foreignField: 'post',
+});
 
 export default mongoose.model('Post', PostSchema);

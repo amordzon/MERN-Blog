@@ -57,7 +57,6 @@ export const createCategory = (req, res) => {
                 name: req.body.name,
                 slug: req.body.slug,
                 description: req.body.description,
-                created_at: req.body.created_at,
             });
             return category
                 .save()

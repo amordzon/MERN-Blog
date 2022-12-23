@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const PopularPosts = () => {
     const [popularPosts, setPopularPosts] = useState([]);
@@ -25,9 +26,12 @@ const PopularPosts = () => {
                     {popularPosts.length > 0 &&
                         popularPosts.map((post, index) => (
                             <li className="list-disc" key={index}>
-                                <a href="" className="hover:underline">
+                                <Link
+                                    to={`/post/${post._id}`}
+                                    className="hover:underline"
+                                >
                                     {post.title}
-                                </a>
+                                </Link>
                             </li>
                         ))}
                 </ul>

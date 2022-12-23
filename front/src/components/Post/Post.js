@@ -46,7 +46,7 @@ const Post = () => {
                         />
                         <Article body={post.body} />
                         <Rating />
-                        <Comments comments={post.comments} />
+                        <Comments comments={post.comments} id={post._id} />
                     </article>
                 </div>
             </main>

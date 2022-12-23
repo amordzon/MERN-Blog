@@ -49,10 +49,12 @@ export const createComment = (req, res) => {
     return comment
         .save()
         .then((newComment) => {
-            return res.status(201).json({
-                success: true,
-                message: 'New comment created successfully',
-                Comment: newComment,
+            Comment.populate(newComment, { path: 'user' }, (err, comment) => {
+                return res.status(201).json({
+                    success: true,
+                    message: 'New comment created successfully',
+                    Comment: comment,
+                });
             });
         })
         .catch((error) => {

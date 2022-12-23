@@ -22,7 +22,7 @@ const Post = () => {
                 .catch((error) => console.log(error));
         };
         getPost();
-    }, []);
+    }, [id]);
     return (
         <div className="lg:flex-none xl:w-4/5 lg:w-3/4 py-8 px-4 mx-auto max-w-screen-xl lg:py-8 lg:px-4">
             <main className="pt-8 pb-16 lg:pb-24 bg-white">

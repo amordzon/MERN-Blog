@@ -1,4 +1,5 @@
 import React from 'react';
+import Moment from 'moment';
 
 const Comment = ({ comment = {} }) => {
     return (
@@ -9,7 +10,9 @@ const Comment = ({ comment = {} }) => {
                         <div className="w-5 h-5 mr-2 mx-auto bg-blue-500 rounded-full"></div>
                         {comment.user.name} {comment.user.surname}
                     </p>
-                    <p className="text-sm text-gray-600">Feb. 8, 2022</p>
+                    <p className="text-sm text-gray-600">
+                        {Moment(comment.createdAt).format('DD-MM-YYYY')}
+                    </p>
                 </div>
                 <button
                     id="dropdownComment1Button"

@@ -50,6 +50,7 @@ export const getOnePost = async (req, res) => {
         .populate([
             {
                 path: 'comments',
+                options: { sort: { createdAt: -1 } },
                 populate: {
                     path: 'user',
                 },

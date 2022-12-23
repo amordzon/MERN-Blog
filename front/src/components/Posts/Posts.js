@@ -7,7 +7,9 @@ const Posts = ({ posts = [] }) => {
             {posts.length > 0 ? (
                 posts.map((post, index) => <Post key={index} post={post} />)
             ) : (
-                <div>There is no posts!</div>
+                <>
+                    <div>There is no posts!</div>
+                </>
             )}
         </div>
     );

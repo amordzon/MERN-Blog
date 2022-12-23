@@ -17,12 +17,12 @@ const CategorySchema = new mongoose.Schema(
             type: String,
             required: false,
         },
-        created_at: {
-            type: Date,
-            required: true,
-        },
     },
-    { toJSON: { virtuals: true }, toObject: { virtuals: true } }
+    {
+        timestamps: true,
+        toJSON: { virtuals: true },
+        toObject: { virtuals: true },
+    }
 );
 
 CategorySchema.virtual('posts', {

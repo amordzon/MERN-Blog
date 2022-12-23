@@ -25,7 +25,6 @@ export const createChatMessage = (req, res) => {
         _id: mongoose.Types.ObjectId(),
         user: req.body.user,
         message: req.body.message,
-        created_at: req.body.created_at,
     });
     return chatmessage
         .save()

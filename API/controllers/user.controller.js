@@ -53,7 +53,6 @@ export const createUser = async (req, res) => {
                 name: req.body.name,
                 surname: req.body.surname,
                 role: req.body.role,
-                created_at: req.body.created_at,
             });
             return user
                 .save()

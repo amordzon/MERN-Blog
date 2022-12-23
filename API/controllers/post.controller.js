@@ -46,6 +46,15 @@ export const getAllPosts = async (req, res) => {
 export const getOnePost = async (req, res) => {
     const id = req.params.postid;
     await Post.findById(id)
+        .populate('author category comments')
+        .populate([
+            {
+                path: 'comments',
+                populate: {
+                    path: 'user',
+                },
+            },
+        ])
         .then((singlePost) => {
             res.status(200).json({
                 success: true,
@@ -70,7 +79,6 @@ export const createPost = (req, res) => {
         body: req.body.body,
         img: req.body.img,
         category: req.body.category,
-        published_at: req.body.published_at,
     });
     return post
         .save()

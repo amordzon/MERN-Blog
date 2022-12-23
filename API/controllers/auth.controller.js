@@ -37,7 +37,6 @@ export const Register = async (req, res) => {
                 email: req.body.email,
                 name: req.body.name,
                 surname: req.body.surname,
-                created_at: req.body.created_at,
             });
             return user
                 .save()

@@ -45,7 +45,6 @@ export const createComment = (req, res) => {
         user: req.body.user,
         body: req.body.body,
         post: req.body.post,
-        created_at: req.body.created_at,
     });
     return comment
         .save()

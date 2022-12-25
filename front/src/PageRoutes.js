@@ -6,7 +6,8 @@ import Category from './components/Category';
 import Others from './components/Others';
 import Auth from './components/Auth/Auth';
 import Profile from './components/Profile/Profile';
-
+import MyPosts from './components/Profile/MyPosts';
+import Aside from './components/Profile/Aside';
 const PageRoutes = () => {
     return (
         <>
@@ -16,7 +17,10 @@ const PageRoutes = () => {
                 <Route path="/others" element={<Others />} />
                 <Route path="/post/:id" element={<Post />} />
                 <Route path="/auth" element={<Auth />} />
-                <Route path="/profile" element={<Profile />} />
+                <Route path="profile" element={<Aside />}>
+                    <Route path="user" element={<Profile />} />
+                    <Route path="myposts" element={<MyPosts />} />
+                </Route>
             </Routes>
         </>
     );

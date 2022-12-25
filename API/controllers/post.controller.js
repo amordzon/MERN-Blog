@@ -72,6 +72,26 @@ export const getOnePost = async (req, res) => {
         });
 };
 
+export const getMyPosts = async (req, res) => {
+    const author = req.user;
+    await Post.find({ author: author })
+        .populate('author category')
+        .then((posts) => {
+            res.status(200).json({
+                success: true,
+                message: 'My Posts',
+                Posts: posts,
+            });
+        })
+        .catch((err) => {
+            res.status(500).json({
+                success: false,
+                message: 'This post does not exist',
+                error: err.message,
+            });
+        });
+};
+
 export const createPost = (req, res) => {
     const post = new Post({
         _id: mongoose.Types.ObjectId(),

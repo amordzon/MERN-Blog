@@ -25,7 +25,7 @@ const jwtSecret = toString(process.env.TOKEN_SECRET);
 // };
 
 export const loggedIn = (req, res, next) => {
-    const token = req.header('x-auth-token');
+    const token = req.header('x-access-token');
 
     if (!token) {
         return res.status(401).json({ msg: 'No token, authorization denied' });
@@ -36,7 +36,7 @@ export const loggedIn = (req, res, next) => {
             if (error) {
                 return res.status(401).json({ msg: 'Token is not valid' });
             } else {
-                req.user = decoded.email;
+                req.user = decoded.id;
                 next();
             }
         });

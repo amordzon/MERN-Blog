@@ -40,13 +40,15 @@ const Navbar = () => {
                     >
                         <i className="fa fa-bars" aria-hidden="true"></i>
                     </button>
-                    <button
-                        type="button"
-                        data-collapse-toggle="navbar-profile"
-                        className="ml-3 text-gray-400 hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-700 rounded-lg text-sm p-2.5 mr-1"
-                    >
-                        <i className="fa fa-user" aria-hidden="true"></i>
-                    </button>
+                    <Link to="/profile/myposts">
+                        <button
+                            type="button"
+                            data-collapse-toggle="navbar-profile"
+                            className="ml-3 text-gray-400 hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-700 rounded-lg text-sm p-2.5 mr-1"
+                        >
+                            <i className="fa fa-user" aria-hidden="true"></i>
+                        </button>
+                    </Link>
                 </div>
                 <div
                     className={

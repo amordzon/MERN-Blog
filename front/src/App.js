@@ -4,10 +4,12 @@ import AboutMe from './components/AboutMe';
 import Chat from './components/Chat/Chat';
 import PopularPosts from './components/PopularPosts';
 import PageRoutes from './PageRoutes';
-import { useLocation } from 'react-router-dom';
+import { useLocation, matchPath } from 'react-router-dom';
 
 function App() {
     const { pathname } = useLocation();
+
+    const noSide = matchPath('/profile/*', pathname);
     return (
         <div>
             <div>
@@ -16,7 +18,7 @@ function App() {
                     <section className="bg-white ">
                         <div className="lg:flex">
                             <PageRoutes />
-                            {pathname != '/auth' && (
+                            {pathname != '/auth' && !noSide && (
                                 <div className="lg:flex-none xl:w-1/5 lg:w-1/4">
                                     <AboutMe />
                                     <Chat />

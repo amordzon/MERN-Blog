@@ -47,7 +47,6 @@ export const createUser = async (req, res) => {
         } else {
             const user = new User({
                 _id: mongoose.Types.ObjectId(),
-                username: req.body.username,
                 password: hashedPwd,
                 email: req.body.email,
                 name: req.body.name,

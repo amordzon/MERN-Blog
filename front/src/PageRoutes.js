@@ -4,6 +4,8 @@ import HomePage from './components/HomePage';
 import { Routes, Route } from 'react-router-dom';
 import Category from './components/Category';
 import Others from './components/Others';
+import Auth from './components/Auth/Auth';
+import Profile from './components/Profile/Profile';
 
 const PageRoutes = () => {
     return (
@@ -13,6 +15,8 @@ const PageRoutes = () => {
                 <Route path="/category/:slug" element={<Category />} />
                 <Route path="/others" element={<Others />} />
                 <Route path="/post/:id" element={<Post />} />
+                <Route path="/auth" element={<Auth />} />
+                <Route path="/profile" element={<Profile />} />
             </Routes>
         </>
     );

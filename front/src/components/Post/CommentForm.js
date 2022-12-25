@@ -15,7 +15,6 @@ const CommentForm = ({ addComment }) => {
         },
         validate,
         onSubmit: (values, { setSubmitting, resetForm }) => {
-            console.log(1111);
             addComment(values, resetForm);
             setSubmitting(false);
         },

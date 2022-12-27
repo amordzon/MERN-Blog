@@ -8,6 +8,9 @@ import Auth from './components/Auth/Auth';
 import Profile from './components/Profile/Profile';
 import MyPosts from './components/Profile/MyPosts';
 import Aside from './components/Profile/Aside';
+import Inbox from './components/Profile/Inbox';
+import NewPost from './components/Profile/NewPost';
+
 const PageRoutes = () => {
     return (
         <>
@@ -20,6 +23,8 @@ const PageRoutes = () => {
                 <Route path="profile" element={<Aside />}>
                     <Route path="user" element={<Profile />} />
                     <Route path="myposts" element={<MyPosts />} />
+                    <Route path="inbox" element={<Inbox />} />
+                    <Route path="newpost" element={<NewPost />} />
                 </Route>
             </Routes>
         </>

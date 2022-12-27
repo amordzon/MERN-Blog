@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useLayoutEffect, useMemo, useState } from 'react';
 import Comment from './Comment';
 import CommentForm from './CommentForm';
 import { useSelector } from 'react-redux';
@@ -7,7 +7,12 @@ import { useSelector } from 'react-redux';
 const Comments = ({ comments = [], id = '' }) => {
     const [comm, setComm] = useState(comments);
     const { user: currentUser } = useSelector((state) => state.auth);
-    useEffect(() => {
+    const commentsMemo = useMemo(() => {
+        return comm.map((comment, index) => (
+            <Comment comment={comment} key={index} />
+        ));
+    }, [comm]);
+    useLayoutEffect(() => {
         console.log(comments);
         if (comm.length == 0) {
             setComm(comments);
@@ -39,9 +44,7 @@ const Comments = ({ comments = [], id = '' }) => {
                 </h2>
             </div>
             <CommentForm addComment={addComment} />
-            {comm.map((comment, index) => (
-                <Comment comment={comment} key={index} />
-            ))}
+            {commentsMemo}
         </div>
     );
 };

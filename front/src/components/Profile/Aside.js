@@ -19,7 +19,7 @@ const Aside = () => {
     }
     return (
         <>
-            <aside className=" xl:w-1/5 lg:w-1/4 lg:h-screen lg:sticky lg:top-20">
+            <aside className=" xl:w-1/5 lg:w-1/4 lg:h-screen lg:sticky lg:top-20 mt-2">
                 <div className="overflow-y-auto py-2 px-3 bg-gray-50 lg:h-screen  shadow rounded">
                     <span className="self-center text-xl font-semibold whitespace-nowrap">
                         {currentUser.user.name} {currentUser.user.surname}
@@ -48,7 +48,7 @@ const Aside = () => {
                         </li>
                         <li>
                             <Link
-                                to="#"
+                                to="/profile/newpost"
                                 className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg hover:bg-gray-100"
                             >
                                 <i className="fa-regular fa-plus flex-shrink-0 text-gray-500 transition duration-75 group-hover:text-gray-900"></i>

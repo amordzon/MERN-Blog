@@ -73,24 +73,69 @@ export const createUser = async (req, res) => {
     });
 };
 
-export const updateUser = async (req, res) => {
-    const id = req.params.userid;
-    const updateObject = req.body;
-    await User.update({ _id: id }, { $set: updateObject })
-        .exec()
-        .then(() => {
-            res.status(200).json({
-                success: true,
-                message: 'User is updated',
-                updateUser: updateObject,
-            });
-        })
-        .catch((err) => {
+export const updateUserWithToken = async (req, res) => {
+    const id = req.user;
+    const user = await User.findOne({ _id: id });
+    if (req.body.password && req.body.oldpassword) {
+        const validate = await bcrypt.compare(
+            req.body.oldpassword,
+            user.password
+        );
+        if (validate) {
+            const hashedPwd = await bcrypt.hash(req.body.password, 10);
+            await User.findByIdAndUpdate(
+                id,
+                {
+                    password: hashedPwd,
+                    email: req.body.email,
+                    name: req.body.name,
+                    surname: req.body.surname,
+                },
+                { new: true }
+            )
+                .then((user) => {
+                    res.status(200).json({
+                        success: true,
+                        message: 'User is updated',
+                        user: user,
+                    });
+                })
+                .catch((err) => {
+                    res.status(500).json({
+                        success: false,
+                        message: 'Server error. Please try again.',
+                    });
+                });
+        } else {
             res.status(500).json({
                 success: false,
-                message: 'Server error. Please try again.',
+                message: 'Invalid password.',
             });
-        });
+        }
+    } else {
+        await User.findByIdAndUpdate(
+            id,
+            {
+                email: req.body.email,
+                name: req.body.name,
+                surname: req.body.surname,
+            },
+            { new: true }
+        )
+            .then((user) => {
+                res.status(200).json({
+                    success: true,
+                    message: 'User is updated',
+                    user: user,
+                });
+            })
+            .catch((err) => {
+                res.status(500).json({
+                    success: false,
+                    message: 'Server error. Please try again.',
+                });
+            });
+    }
 };
 
 export const deleteUser = async (req, res) => {

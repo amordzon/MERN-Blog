@@ -141,16 +141,33 @@ export const updatePost = async (req, res) => {
 
 export const deletePost = async (req, res) => {
     const id = req.params.postid;
-    await Post.findByIdAndRemove(id)
-        .exec()
-        .then(() =>
-            res.status(204).json({
-                success: true,
-            })
-        )
-        .catch((err) =>
+    const userId = req.user;
+    await Post.findById(id)
+        .then((post) => {
+            if (post.author == userId) {
+                post.remove()
+                    .then(() =>
+                        res.status(204).json({
+                            success: true,
+                        })
+                    )
+                    .catch((err) =>
+                        res.status(500).json({
+                            success: false,
+                            message: 'Server error. Please try again.',
+                        })
+                    );
+            } else {
+                res.status(500).json({
+                    success: false,
+                    message: 'Unauthorized action!',
+                });
+            }
+        })
+        .catch((error) => {
             res.status(500).json({
                 success: false,
-            })
-        );
+                message: 'Server error. Please try again.',
+            });
+        });
 };

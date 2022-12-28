@@ -16,6 +16,6 @@ postRouter.get('/myposts', loggedIn, getMyPosts);
 postRouter.post('/new', createPost);
 postRouter.get('/:postid', getOnePost);
 postRouter.put('/:postid', updatePost);
-postRouter.delete('/:postid', deletePost);
+postRouter.delete('/:postid', loggedIn, deletePost);
 
 export default postRouter;

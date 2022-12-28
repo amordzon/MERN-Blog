@@ -10,7 +10,6 @@ const UserSchema = new mongoose.Schema(
         name: { type: String, required: true },
         surname: { type: String, required: true },
         role: { type: String, required: true, default: 'normal' },
-        refresh_token: { type: String },
     },
     { timestamps: true }
 );

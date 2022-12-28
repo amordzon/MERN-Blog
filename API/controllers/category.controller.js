@@ -50,7 +50,10 @@ export const getOneCategory = async (req, res) => {
 export const createCategory = (req, res) => {
     Category.find({ name: req.body.name }, (err, categories) => {
         if (categories.length) {
-            return res.sendStatus(409);
+            return res.status(409).json({
+                success: true,
+                message: 'This category already exists!',
+            });
         } else {
             const category = new Category({
                 _id: mongoose.Types.ObjectId(),

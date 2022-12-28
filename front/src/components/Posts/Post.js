@@ -2,12 +2,16 @@ import React from 'react';
 import Moment from 'moment';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import DOMPurify from 'dompurify';
 
 const Post = ({ post, myPosts, handleDelete }) => {
     const { user: currentUser } = useSelector((state) => state.auth);
     const truncate = (str) => {
         return str.length > 200 ? str.slice(0, 198) + '...' : str;
     };
+    const sanitizedData = () => ({
+        __html: DOMPurify.sanitize(truncate(post.body)),
+    });
     return (
         <article className="p-6 bg-white rounded-lg border border-gray-200 shadow-md ">
             {currentUser?.user?._id == post.author._id && myPosts && (
@@ -45,7 +49,10 @@ const Post = ({ post, myPosts, handleDelete }) => {
                 <Link to={`/post/${post._id}`}>{post.title}</Link>
             </h2>
             <p className="mb-5 font-light text-gray-500 ">
-                {truncate(post.body)}
+                <div
+                    className="prose"
+                    dangerouslySetInnerHTML={sanitizedData()}
+                ></div>
             </p>
             <div className="flex justify-between items-center">
                 <div className="flex items-center space-x-4">

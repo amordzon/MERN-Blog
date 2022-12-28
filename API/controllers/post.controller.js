@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import Post from '../models/post.model.js';
+import Category from '../models/category.model.js';
 
 export const getAllPosts = async (req, res) => {
     const sortBy = req.query.sortBy;
@@ -93,12 +94,19 @@ export const getMyPosts = async (req, res) => {
 };
 
 export const createPost = (req, res) => {
+    const author = req.user;
+
     const post = new Post({
         _id: mongoose.Types.ObjectId(),
-        author: req.body.author,
+        author: author,
         title: req.body.title,
         body: req.body.body,
-        img: req.body.img,
+        img:
+            req.protocol +
+            '://' +
+            req.get('host') +
+            '/uploads/' +
+            req.file.filename,
         category: req.body.category,
     });
     return post

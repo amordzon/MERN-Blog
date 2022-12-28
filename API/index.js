@@ -10,6 +10,8 @@ import categoryRouter from './routes/category.route.js';
 import commentRouter from './routes/comment.route.js';
 import chatRouter from './routes/chat.route.js';
 import authRouter from './routes/auth.route.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 dotenv.config();
 const app = express();
@@ -47,12 +49,16 @@ mongoose.connect(
     }
 );
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 app.use('/api/posts', postRouter);
 app.use('/api/users', userRouter);
 app.use('/api/category', categoryRouter);
 app.use('/api/comments', commentRouter);
 app.use('/api/chat', chatRouter);
 app.use('/api/auth', authRouter);
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.listen(process.env.PORT, () => {
     console.log(`Our server is running on port ${process.env.PORT}`);

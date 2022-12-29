@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import Post from '../models/post.model.js';
+import Category from '../models/category.model.js';
 
 export const getAllPosts = async (req, res) => {
     const sortBy = req.query.sortBy;
@@ -72,13 +73,40 @@ export const getOnePost = async (req, res) => {
         });
 };
 
+export const getMyPosts = async (req, res) => {
+    const author = req.user;
+    await Post.find({ author: author })
+        .populate('author category')
+        .then((posts) => {
+            res.status(200).json({
+                success: true,
+                message: 'My Posts',
+                Posts: posts,
+            });
+        })
+        .catch((err) => {
+            res.status(500).json({
+                success: false,
+                message: 'This post does not exist',
+                error: err.message,
+            });
+        });
+};
+
 export const createPost = (req, res) => {
+    const author = req.user;
+
     const post = new Post({
         _id: mongoose.Types.ObjectId(),
-        author: req.body.author,
+        author: author,
         title: req.body.title,
         body: req.body.body,
-        img: req.body.img,
+        img:
+            req.protocol +
+            '://' +
+            req.get('host') +
+            '/uploads/' +
+            req.file.filename,
         category: req.body.category,
     });
     return post
@@ -121,16 +149,33 @@ export const updatePost = async (req, res) => {
 
 export const deletePost = async (req, res) => {
     const id = req.params.postid;
-    await Post.findByIdAndRemove(id)
-        .exec()
-        .then(() =>
-            res.status(204).json({
-                success: true,
-            })
-        )
-        .catch((err) =>
+    const userId = req.user;
+    await Post.findById(id)
+        .then((post) => {
+            if (post.author == userId) {
+                post.remove()
+                    .then(() =>
+                        res.status(204).json({
+                            success: true,
+                        })
+                    )
+                    .catch((err) =>
+                        res.status(500).json({
+                            success: false,
+                            message: 'Server error. Please try again.',
+                        })
+                    );
+            } else {
+                res.status(500).json({
+                    success: false,
+                    message: 'Unauthorized action!',
+                });
+            }
+        })
+        .catch((error) => {
             res.status(500).json({
                 success: false,
-            })
-        );
+                message: 'Server error. Please try again.',
+            });
+        });
 };

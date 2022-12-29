@@ -5,9 +5,11 @@ import {
     LOGIN_FAIL,
     LOGOUT,
     SET_MESSAGE,
+    UPDATE_SUCCESS,
+    UPDATE_FAIL,
 } from './types';
 
-import { register, login, logout } from '../services/auth.service';
+import { register, login, logout, update } from '../services/auth.service';
 
 export const RegisterAction =
     (email, name, surname, password) => (dispatch) => {
@@ -66,6 +68,36 @@ export const LoginAction = (email, password) => (dispatch) => {
         }
     );
 };
+
+export const UpdateAction =
+    (email, name, surname, password, oldpassword) => (dispatch) => {
+        return update(email, name, surname, password, oldpassword).then(
+            (data) => {
+                console.log(data.user);
+                dispatch({
+                    type: UPDATE_SUCCESS,
+                    payload: { user: { user: data.user, token: data.token } },
+                });
+
+                return Promise.resolve();
+            },
+            (error) => {
+                console.log(error.response.data.message);
+                const message = error.response.data.message;
+
+                dispatch({
+                    type: UPDATE_FAIL,
+                });
+
+                dispatch({
+                    type: SET_MESSAGE,
+                    payload: message,
+                });
+
+                return Promise.reject();
+            }
+        );
+    };
 
 export const LogoutAction = () => (dispatch) => {
     logout();

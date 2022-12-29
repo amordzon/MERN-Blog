@@ -81,7 +81,6 @@ export const Logout = async (req, res) => {
 };
 
 const createJWT = (user) => {
-    const maxAge = 3 * 60 * 60;
     const token = jwt.sign(
         {
             id: user._id,
@@ -90,7 +89,7 @@ const createJWT = (user) => {
         },
         jwtSecret,
         {
-            expiresIn: maxAge,
+            expiresIn: '7d',
         }
     );
     return token;

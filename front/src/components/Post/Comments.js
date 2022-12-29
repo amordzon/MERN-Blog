@@ -1,11 +1,18 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useLayoutEffect, useMemo, useState } from 'react';
 import Comment from './Comment';
 import CommentForm from './CommentForm';
+import { useSelector } from 'react-redux';
 
 const Comments = ({ comments = [], id = '' }) => {
     const [comm, setComm] = useState(comments);
-    useEffect(() => {
+    const { user: currentUser } = useSelector((state) => state.auth);
+    const commentsMemo = useMemo(() => {
+        return comm.map((comment, index) => (
+            <Comment comment={comment} key={index} />
+        ));
+    }, [comm]);
+    useLayoutEffect(() => {
         console.log(comments);
         if (comm.length == 0) {
             setComm(comments);
@@ -15,7 +22,7 @@ const Comments = ({ comments = [], id = '' }) => {
         console.log(123);
         axios
             .post('http://localhost:3000/api/comments/new', {
-                user: '638de40f601ff38bd7a1c252',
+                user: currentUser.user._id,
                 body: values.body,
                 post: id,
             })
@@ -37,9 +44,7 @@ const Comments = ({ comments = [], id = '' }) => {
                 </h2>
             </div>
             <CommentForm addComment={addComment} />
-            {comm.map((comment, index) => (
-                <Comment comment={comment} key={index} />
-            ))}
+            {commentsMemo}
         </div>
     );
 };

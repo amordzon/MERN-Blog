@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
-import { UpdateAction } from '../../actions/auth';
-import { clearMessage } from '../../actions/message';
-
+import { update } from '../../services/auth.service';
+import { loggedIn } from '../../slices/authSlice';
 const Profile = () => {
     const [edit, setEdit] = useState(false);
-    const { user: currentUser } = useSelector((state) => state.auth);
+    const { user: currentUser } = useSelector(
+        (state) => state.persistedReducer.auth
+    );
+
     const dispatch = useDispatch();
-    const { message } = useSelector((state) => state.message);
+    const [message, setMessage] = useState('');
 
     const validate = (values) => {
         const errors = {};
@@ -41,19 +43,16 @@ const Profile = () => {
         },
         validate,
         onSubmit: (values, { setSubmitting }) => {
-            dispatch(
-                UpdateAction(
-                    values.email,
-                    values.name,
-                    values.surname,
-                    values.password,
-                    values.oldpassword
-                )
-            ).then(() => {
-                dispatch(clearMessage());
-                setEdit(false);
-                setSubmitting(false);
-            });
+            update(values.email, values.name, values.surname, values.password)
+                .then((response) => {
+                    dispatch(loggedIn(response.User));
+                    setEdit(false);
+                    setSubmitting(false);
+                    setSubmitting(false);
+                })
+                .catch((error) => {
+                    setMessage(() => error.response.data.message);
+                });
         },
     });
 
@@ -225,7 +224,7 @@ const Profile = () => {
                     <button
                         onClick={() => {
                             setEdit(!edit);
-                            dispatch(clearMessage());
+                            setMessage('');
                         }}
                         className="text-white bg-blue-700 hover:bg-blue-800 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2.5 text-center mr-2 mb-2"
                     >

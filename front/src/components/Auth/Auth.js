@@ -2,16 +2,13 @@ import React, { useState } from 'react';
 import Login from './Login';
 import Signup from './Signup';
 import { Navigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import { clearMessage } from '../../actions/message';
+import { useSelector } from 'react-redux';
 
 const Auth = () => {
-    const { isLoggedIn } = useSelector((state) => state.auth);
+    const { isLoggedIn } = useSelector((state) => state.persistedReducer.auth);
     const [login, setLogin] = useState(true);
 
-    const dispatch = useDispatch();
     const setLoginRegister = (isLogin) => {
-        dispatch(clearMessage());
         setLogin(isLogin);
     };
 

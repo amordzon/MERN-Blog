@@ -6,7 +6,9 @@ import { useSelector } from 'react-redux';
 
 const Comments = ({ comments = [], id = '' }) => {
     const [comm, setComm] = useState(comments);
-    const { user: currentUser } = useSelector((state) => state.auth);
+    const { user: currentUser } = useSelector(
+        (state) => state.persistedReducer.auth
+    );
     const commentsMemo = useMemo(() => {
         return comm.map((comment, index) => (
             <Comment comment={comment} key={index} />

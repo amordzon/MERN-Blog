@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useFormik } from 'formik';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { LoginAction } from '../../actions/auth';
+import { loggedIn } from '../../slices/authSlice';
+import { login } from '../../services/auth.service';
+import authHeader from '../../services/auth-header';
 
 const Login = ({ isLogin }) => {
     let navigate = useNavigate();
     const dispatch = useDispatch();
-    const { message } = useSelector((state) => state.message);
+    const [message, setMessage] = useState('');
     const validate = (values) => {
         const errors = {};
         if (!values.email) {
@@ -29,10 +31,16 @@ const Login = ({ isLogin }) => {
         },
         validate,
         onSubmit: (values, { setSubmitting }) => {
-            dispatch(LoginAction(values.email, values.password)).then(() => {
-                navigate('/profile/myposts');
-                setSubmitting(false);
-            });
+            login(values.email, values.password)
+                .then((response) => {
+                    dispatch(loggedIn(response.User));
+                    navigate('/profile/myposts');
+                    setSubmitting(false);
+                    authHeader(response.User.token);
+                })
+                .catch((error) => {
+                    setMessage(() => error.response.data.message);
+                });
         },
     });
 

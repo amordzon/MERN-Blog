@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
-import { RegisterAction } from '../../actions/auth';
 import { useNavigate } from 'react-router-dom';
+import { loggedIn } from '../../slices/authSlice';
+import { register } from '../../services/auth.service';
+import authHeader from '../../services/auth-header';
 
 const Signup = ({ isLogin }) => {
     const [passwordStr, setPasswordStr] = useState('');
     let navigate = useNavigate();
-    const { message } = useSelector((state) => state.message);
+    const [message, setMessage] = useState('');
     const dispatch = useDispatch();
     const validate = (values) => {
         const errors = {};
@@ -72,17 +74,16 @@ const Signup = ({ isLogin }) => {
         },
         validate,
         onSubmit: (values, { setSubmitting }) => {
-            dispatch(
-                RegisterAction(
-                    values.email,
-                    values.name,
-                    values.surname,
-                    values.password
-                )
-            ).then(() => {
-                navigate('/profile');
-                setSubmitting(false);
-            });
+            register(values.email, values.name, values.surname, values.password)
+                .then((response) => {
+                    dispatch(loggedIn(response.User));
+                    navigate('/profile/myposts');
+                    setSubmitting(false);
+                    authHeader(response.User.token);
+                })
+                .catch((error) => {
+                    setMessage(() => error.response.data.message);
+                });
         },
     });
 

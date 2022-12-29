@@ -75,6 +75,7 @@ export const createUser = async (req, res) => {
 
 export const updateUserWithToken = async (req, res) => {
     const id = req.user;
+    const token = req.header('x-access-token');
     const user = await User.findOne({ _id: id });
     if (req.body.password && req.body.oldpassword) {
         const validate = await bcrypt.compare(
@@ -97,7 +98,10 @@ export const updateUserWithToken = async (req, res) => {
                     res.status(200).json({
                         success: true,
                         message: 'User is updated',
-                        user: user,
+                        User: {
+                            user: user,
+                            token: token,
+                        },
                     });
                 })
                 .catch((err) => {
@@ -126,7 +130,10 @@ export const updateUserWithToken = async (req, res) => {
                 res.status(200).json({
                     success: true,
                     message: 'User is updated',
-                    user: user,
+                    User: {
+                        user: user,
+                        token: token,
+                    },
                 });
             })
             .catch((err) => {

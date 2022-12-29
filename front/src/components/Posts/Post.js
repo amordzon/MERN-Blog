@@ -5,7 +5,9 @@ import { useSelector } from 'react-redux';
 import DOMPurify from 'dompurify';
 
 const Post = ({ post, myPosts, handleDelete }) => {
-    const { user: currentUser } = useSelector((state) => state.auth);
+    const { user: currentUser } = useSelector(
+        (state) => state.persistedReducer.auth
+    );
     const truncate = (str) => {
         return str.length > 200 ? str.slice(0, 198) + '...' : str;
     };

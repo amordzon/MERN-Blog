@@ -2,19 +2,21 @@ import React from 'react';
 import { Outlet, useNavigate, Navigate } from 'react-router';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { LogoutAction } from '../../actions/auth';
+import { loggedOut } from '../../slices/authSlice';
 
 const Aside = () => {
     let navigate = useNavigate();
     const dispatch = useDispatch();
-    const { user: currentUser } = useSelector((state) => state.auth);
+    const { user: currentUser, isLogged } = useSelector(
+        (state) => state.persistedReducer.auth
+    );
 
     const handleClick = () => {
-        dispatch(LogoutAction()).then(() => {
-            navigate('/');
-        });
+        dispatch(loggedOut());
+        navigate('/');
     };
-    if (!currentUser) {
+    console.log(isLogged);
+    if (!isLogged) {
         return <Navigate to="/auth" />;
     }
     return (

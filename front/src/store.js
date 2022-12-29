@@ -1,13 +1,26 @@
-import { createStore, applyMiddleware } from 'redux';
-import { composeWithDevTools } from 'redux-devtools-extension';
-import thunk from 'redux-thunk';
-import rootReducer from './reducers';
+import { configureStore } from '@reduxjs/toolkit';
+import authSlice from './slices/authSlice';
+import storage from 'redux-persist/lib/storage';
+import { persistReducer } from 'redux-persist';
+import { combineReducers } from '@reduxjs/toolkit';
+import messageSlice from './slices/messageSlice';
 
-const middleware = [thunk];
+const persistConfig = {
+    key: 'root',
+    version: 1,
+    storage,
+};
 
-const store = createStore(
-    rootReducer,
-    composeWithDevTools(applyMiddleware(...middleware))
-);
+const reducer = combineReducers({
+    auth: authSlice,
+});
 
-export default store;
+const persistedReducer = persistReducer(persistConfig, reducer);
+
+export const store = configureStore({
+    reducer: { persistedReducer, message: messageSlice },
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware({
+            serializableCheck: false,
+        }),
+});

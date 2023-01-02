@@ -16,7 +16,7 @@ postRouter.get('/', getAllPosts);
 postRouter.get('/myposts', loggedIn, getMyPosts);
 postRouter.post('/new', [loggedIn, upload.single('img')], createPost);
 postRouter.get('/:postid', getOnePost);
-postRouter.put('/:postid', updatePost);
+postRouter.put('/:postid', [loggedIn, upload.single('img')], updatePost);
 postRouter.delete('/:postid', loggedIn, deletePost);
 
 export default postRouter;

@@ -128,7 +128,15 @@ export const createPost = (req, res) => {
 
 export const updatePost = async (req, res) => {
     const id = req.params.postid;
-    const updateObject = req.body;
+    let updateObject = req.body;
+    updateObject.img = updateObject.img
+        ? updateObject.img
+        : req.protocol +
+          '://' +
+          req.get('host') +
+          '/uploads/' +
+          req.file.filename;
+
     await Post.update({ _id: id }, { $set: updateObject })
         .exec()
         .then(() => {

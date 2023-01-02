@@ -3,13 +3,34 @@ import { useFormik } from 'formik';
 import axios from 'axios';
 import authHeader from '../../services/auth-header';
 import Swal from 'sweetalert2';
+import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-const NewPost = () => {
+const NewEditPost = () => {
+    const navigate = useNavigate();
+    const { id } = useParams();
+    const isAddMode = !id;
     const [diffCategory, setDiffCategory] = useState(false);
+    const [post, setPost] = useState({
+        title: '',
+        body: '',
+        category: '',
+        categoryName: '',
+        categoryDescription: '',
+        img: '',
+    });
 
     const [categories, setCategories] = useState([]);
-
     useEffect(() => {
+        console.log(12223);
+        setPost({
+            title: '',
+            body: '',
+            category: '',
+            categoryName: '',
+            categoryDescription: '',
+            img: '',
+        });
         axios
             .get('http://localhost:3000/api/category')
             .then(function (response) {
@@ -19,7 +40,25 @@ const NewPost = () => {
             .catch(function (error) {
                 console.log(error);
             });
-    }, []);
+        if (isAddMode == false) {
+            axios.get('http://localhost:3000/api/posts/' + id).then((res) => {
+                const postValues = res.data.Post;
+                setPost({
+                    title: postValues.title,
+                    body: postValues.body,
+                    category: postValues.category._id,
+                    categoryName: '',
+                    categoryDescription: '',
+                    img: postValues.img,
+                });
+                console.log(res.data);
+                formik.setFieldValue('title', post.title, false);
+                formik.setFieldValue('body', post.body, false);
+                formik.setFieldValue('category', post.category._id, false);
+                formik.setFieldValue('img', post.img, false);
+            });
+        }
+    }, [id]);
     const validate = (values) => {
         const errors = {};
         if (!values.title) {
@@ -41,82 +80,129 @@ const NewPost = () => {
         return errors;
     };
     const formik = useFormik({
-        initialValues: {
-            title: '',
-            body: '',
-            category: '',
-            categoryName: '',
-            categoryDescription: '',
-            img: '',
-        },
+        initialValues: post,
+        enableReinitialize: true,
         validate,
         onSubmit: async (values, { setSubmitting, resetForm }) => {
             console.log(values);
-            if (diffCategory) {
-                await axios
-                    .post(
-                        'http://localhost:3000/api/category/new',
-                        {
-                            name: values.categoryName,
-                            slug: 'slug',
-                            description: values.categoryDescription,
-                        },
-                        {
-                            headers: authHeader(),
-                        }
-                    )
-                    .then(function (response) {
-                        values.category = response.data.Category._id;
-                        values.categoryName = '';
-                        values.categoryDescription = '';
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: error.response.data.message,
-                        });
-                        setSubmitting(false);
-                    });
-            }
-            if (values.categoryName == '' && values.categoryDescription == '') {
-                await axios
-                    .post(
-                        'http://localhost:3000/api/posts/new',
-                        {
-                            title: values.title,
-                            body: values.body,
-                            img: values.img,
-                            category: values.category,
-                        },
-                        {
-                            headers: {
-                                ...authHeader(),
-                                'content-type': 'multipart/form-data',
-                            },
-                        }
-                    )
-                    .then(function (response) {
-                        Swal.fire('Success!', response.data.message, 'success');
-                        resetForm();
-                    })
-                    .catch(function (error) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: error.response.data.message,
-                        });
-                    });
-
-                setSubmitting(false);
+            if (isAddMode) {
+                createPost(values, resetForm, setSubmitting);
+            } else {
+                editPost(values, resetForm, setSubmitting);
             }
         },
     });
+
+    const editPost = async (values, resetForm, setSubmitting) => {
+        if (diffCategory) {
+            await createCategory(values, setSubmitting);
+        }
+        if (values.categoryName == '' && values.categoryDescription == '') {
+            await axios
+                .put(
+                    'http://localhost:3000/api/posts/' + id,
+                    {
+                        title: values.title,
+                        body: values.body,
+                        img: values.img,
+                        category: values.category,
+                    },
+                    {
+                        headers: {
+                            ...authHeader(),
+                            'content-type': 'multipart/form-data',
+                        },
+                    }
+                )
+                .then(function (response) {
+                    Swal.fire('Success!', response.data.message, 'success');
+                    navigate('/profile/newpost');
+                })
+                .catch(function (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: error.response.data.message,
+                    });
+                });
+
+            setSubmitting(false);
+        }
+    };
+
+    const createCategory = async (values, setSubmitting) => {
+        await axios
+            .post(
+                'http://localhost:3000/api/category/new',
+                {
+                    name: values.categoryName,
+                    description: values.categoryDescription,
+                },
+                {
+                    headers: authHeader(),
+                }
+            )
+            .then(function (response) {
+                values.category = response.data.Category._id;
+                values.categoryName = '';
+                values.categoryDescription = '';
+                console.log(values);
+            })
+            .catch(function (error) {
+                console.log(error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: error.response.data.message,
+                });
+                setSubmitting(false);
+            });
+    };
+
+    const createPost = async (values, resetForm, setSubmitting) => {
+        if (diffCategory) {
+            await createCategory(values, setSubmitting);
+        }
+        console.log(values);
+        if (values.categoryName == '' && values.categoryDescription == '') {
+            await axios
+                .post(
+                    'http://localhost:3000/api/posts/new',
+                    {
+                        title: values.title,
+                        body: values.body,
+                        img: values.img,
+                        category: values.category,
+                    },
+                    {
+                        headers: {
+                            ...authHeader(),
+                            'content-type': 'multipart/form-data',
+                        },
+                    }
+                )
+                .then(function (response) {
+                    Swal.fire('Success!', response.data.message, 'success');
+                    resetForm();
+                })
+                .catch(function (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: error.response.data.message,
+                    });
+                });
+
+            setSubmitting(false);
+        }
+    };
+
     return (
         <>
             <div className="mt-5 xl:w-4/5 lg:w-3/4 py-4 px-4 ">
-                <h1 className="font-bold text-xl ml-2 my-4">Create new post</h1>
+                <h1 className="font-bold text-xl ml-2 my-4">
+                    {isAddMode ? 'Create new post' : 'Edit post'}
+                </h1>
                 <form onSubmit={formik.handleSubmit}>
                     <div className="shadow sm:rounded-md sm:overflow-hidden">
                         <div className="px-4 py-5 bg-white space-y-6 sm:p-6">
@@ -318,6 +404,10 @@ const NewPost = () => {
                                     </div>
                                 </div>
                             </div>
+                            <img
+                                src={formik.values.img}
+                                alt={formik.values.img.name}
+                            />
 
                             {formik.errors.img ? (
                                 <div className="text-red-700 text-sm mb-3">
@@ -330,7 +420,7 @@ const NewPost = () => {
                                 type="submit"
                                 className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                             >
-                                Add
+                                {isAddMode ? 'Add' : 'Edit'}
                             </button>
                         </div>
                     </div>
@@ -340,4 +430,4 @@ const NewPost = () => {
     );
 };
 
-export default NewPost;
+export default NewEditPost;

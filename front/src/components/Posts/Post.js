@@ -18,9 +18,11 @@ const Post = ({ post, myPosts, handleDelete }) => {
         <article className="p-6 bg-white rounded-lg border border-gray-200 shadow-md ">
             {currentUser?.user?._id == post.author._id && myPosts && (
                 <>
-                    <button className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded">
-                        Edit
-                    </button>
+                    <Link to={`/profile/editpost/${post._id}`}>
+                        <button className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded">
+                            Edit
+                        </button>
+                    </Link>
                     <button
                         onClick={() => handleDelete(post._id)}
                         className=" ml-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"

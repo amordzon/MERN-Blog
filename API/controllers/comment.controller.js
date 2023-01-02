@@ -69,16 +69,46 @@ export const createComment = (req, res) => {
 export const updateComment = async (req, res) => {
     const id = req.params.commentid;
     const updateObject = req.body;
-    await Comment.update({ _id: id }, { $set: updateObject })
-        .exec()
-        .then(() => {
-            res.status(200).json({
-                success: true,
-                message: 'Comment is updated',
-                updatePost: updateObject,
-            });
+    const author = req.user;
+    // await Comment.update({ _id: id }, { $set: updateObject })
+    //     .exec()
+    //     .then(() => {
+    //         res.status(200).json({
+    //             success: true,
+    //             message: 'Comment is updated',
+    //             updatePost: updateObject,
+    //         });
+    //     })
+    //     .catch((err) => {
+    //         res.status(500).json({
+    //             success: false,
+    //             message: 'Server error. Please try again.',
+    //         });
+    //     });
+    await Comment.findById(id)
+        .then((comment) => {
+            if (comment.user == author) {
+                comment
+                    .updateOne({ $set: updateObject })
+                    .then(() =>
+                        res.status(204).json({
+                            success: true,
+                        })
+                    )
+                    .catch(() =>
+                        res.status(500).json({
+                            success: false,
+                            message: 'Server error. Please try again.',
+                        })
+                    );
+            } else {
+                res.status(500).json({
+                    success: false,
+                    message: 'Unauthorized action!',
+                });
+            }
         })
-        .catch((err) => {
+        .catch(() => {
             res.status(500).json({
                 success: false,
                 message: 'Server error. Please try again.',
@@ -87,17 +117,35 @@ export const updateComment = async (req, res) => {
 };
 
 export const deleteComment = async (req, res) => {
+    const author = req.user;
     const id = req.params.commentid;
-    await Comment.findByIdAndRemove(id)
-        .exec()
-        .then(() =>
-            res.status(204).json({
-                success: true,
-            })
-        )
-        .catch((err) =>
+    await Comment.findById(id)
+        .then((comment) => {
+            if (comment.user == author) {
+                comment
+                    .remove()
+                    .then(() =>
+                        res.status(204).json({
+                            success: true,
+                        })
+                    )
+                    .catch(() =>
+                        res.status(500).json({
+                            success: false,
+                            message: 'Server error. Please try again.',
+                        })
+                    );
+            } else {
+                res.status(500).json({
+                    success: false,
+                    message: 'Unauthorized action!',
+                });
+            }
+        })
+        .catch(() => {
             res.status(500).json({
                 success: false,
-            })
-        );
+                message: 'Server error. Please try again.',
+            });
+        });
 };

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useFormik } from 'formik';
 
-const CommentForm = ({ addComment }) => {
+const CommentForm = ({ addComment, comm, updateComment }) => {
     const validate = (values) => {
         const errors = {};
         if (!values.body) {
@@ -11,12 +11,16 @@ const CommentForm = ({ addComment }) => {
     };
     const formik = useFormik({
         initialValues: {
-            body: '',
+            body: comm.body ? comm.body : '',
         },
+        enableReinitialize: true,
         validate,
         onSubmit: (values, { setSubmitting, resetForm }) => {
-            addComment(values, resetForm);
-            setSubmitting(false);
+            if (comm) {
+                updateComment(comm._id, values, resetForm, setSubmitting);
+            } else {
+                addComment(values, resetForm, setSubmitting);
+            }
         },
     });
     return (
@@ -44,8 +48,7 @@ const CommentForm = ({ addComment }) => {
                 <input
                     type="submit"
                     className="inline-flex bg-blue-700 text-white items-center py-2.5 px-4 text-xs font-medium text-center bg-primary-700 rounded-lg focus:ring-4 focus:ring-primary-200 hover:bg-primary-800"
-                    value="
-                    Post comment"
+                    value={comm.body ? 'Edit comment' : 'Post comment'}
                 />
             </form>
         </div>

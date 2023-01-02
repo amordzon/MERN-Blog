@@ -58,7 +58,6 @@ const NewPost = () => {
                         'http://localhost:3000/api/category/new',
                         {
                             name: values.categoryName,
-                            slug: 'slug',
                             description: values.categoryDescription,
                         },
                         {

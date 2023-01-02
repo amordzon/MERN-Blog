@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 import Post from '../models/post.model.js';
-import Category from '../models/category.model.js';
 
 export const getAllPosts = async (req, res) => {
     const sortBy = req.query.sortBy;

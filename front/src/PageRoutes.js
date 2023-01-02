@@ -25,6 +25,7 @@ const PageRoutes = () => {
                     <Route path="myposts" element={<MyPosts />} />
                     <Route path="inbox" element={<Inbox />} />
                     <Route path="newpost" element={<NewPost />} />
+                    <Route path="editpost/:id" element={<NewPost />} />
                 </Route>
             </Routes>
         </>

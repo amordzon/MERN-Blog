@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import Category from '../models/category.model.js';
+import slugify from 'slugify';
 
 export const getAllCategories = async (req, res) => {
     try {
@@ -58,7 +59,7 @@ export const createCategory = (req, res) => {
             const category = new Category({
                 _id: mongoose.Types.ObjectId(),
                 name: req.body.name,
-                slug: req.body.slug,
+                slug: slugify(req.body.name),
                 description: req.body.description,
             });
             return category

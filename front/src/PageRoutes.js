@@ -10,6 +10,7 @@ import MyPosts from './components/Profile/MyPosts';
 import Aside from './components/Profile/Aside';
 import Inbox from './components/Profile/Inbox';
 import NewEditPost from './components/Profile/NewEditPost';
+import SearchPage from './components/SearchPage';
 
 const PageRoutes = () => {
     return (
@@ -20,6 +21,7 @@ const PageRoutes = () => {
                 <Route path="/others" element={<Others />} />
                 <Route path="/post/:id" element={<Post />} />
                 <Route path="/auth" element={<Auth />} />
+                <Route path="/search" element={<SearchPage />} />
                 <Route path="profile" element={<Aside />}>
                     <Route path="user" element={<Profile />} />
                     <Route path="myposts" element={<MyPosts />} />

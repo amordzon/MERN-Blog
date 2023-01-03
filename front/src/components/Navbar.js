@@ -1,9 +1,22 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useMatch } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { setText } from '../slices/articleSlice';
 
 const Navbar = () => {
     const [navbarOpen, setNavbarOpen] = React.useState(false);
+    const { searchedText } = useSelector((state) => state.article);
 
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const isSearchRoute = useMatch('/search');
+
+    const handleSearchChange = (event) => {
+        if (!isSearchRoute) {
+            navigate('/search');
+        }
+        dispatch(setText(event.target.value));
+    };
     return (
         <nav className="sticky top-0 z-50 border-gray-200 px-2 sm:px-4 py-2.5 rounded-b bg-gray-900">
             <div className="container flex flex-wrap items-center justify-between mx-auto">
@@ -29,7 +42,9 @@ const Navbar = () => {
                             type="text"
                             id="search-navbar"
                             className="block w-full p-2 pl-8 text-sm text-gray-900 border rounded-lg  bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
-                            placeholder="Szukaj..."
+                            placeholder="Search..."
+                            onChange={handleSearchChange}
+                            value={searchedText}
                         />
                     </div>
                     <button
@@ -71,7 +86,9 @@ const Navbar = () => {
                             type="text"
                             id="search-navbar"
                             className="block w-full p-2 pl-10 text-sm border rounded-lg focus:ring-blue-500 focus:border-blue-500 bg-gray-700 border-gray-600 placeholder-gray-400 text-white"
-                            placeholder="Szukaj..."
+                            placeholder="Search..."
+                            onChange={handleSearchChange}
+                            value={searchedText}
                         />
                     </div>
                     <ul className="flex flex-col p-4 mt-4 border rounded-lg md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white bg-gray-800 md:bg-gray-900 border-gray-700">

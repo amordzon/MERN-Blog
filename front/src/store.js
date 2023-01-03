@@ -3,7 +3,7 @@ import authSlice from './slices/authSlice';
 import storage from 'redux-persist/lib/storage';
 import { persistReducer } from 'redux-persist';
 import { combineReducers } from '@reduxjs/toolkit';
-import messageSlice from './slices/messageSlice';
+import articleSlice from './slices/articleSlice';
 
 const persistConfig = {
     key: 'root',
@@ -18,7 +18,7 @@ const reducer = combineReducers({
 const persistedReducer = persistReducer(persistConfig, reducer);
 
 export const store = configureStore({
-    reducer: { persistedReducer, message: messageSlice },
+    reducer: { persistedReducer, article: articleSlice },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
             serializableCheck: false,

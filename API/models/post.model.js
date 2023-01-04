@@ -14,10 +14,12 @@ const PostSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        score: {
-            type: Number,
-            default: 0,
-        },
+        ratings: [
+            {
+                score: Number,
+                ratedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+            },
+        ],
         img: {
             type: String,
             required: true,

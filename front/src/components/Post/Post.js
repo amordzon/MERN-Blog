@@ -6,11 +6,20 @@ import Rating from './Rating';
 import axios from 'axios';
 import Moment from 'moment';
 import { useParams } from 'react-router-dom';
+import authHeader from '../../services/auth-header';
+import Swal from 'sweetalert2';
 
 const Post = () => {
     const [post, setPost] = useState({});
+    const [rating, setRating] = useState([]);
     const { id } = useParams();
 
+    const reducerat = (rating) => {
+        const ratingResult = rating.reduce((acc, curr) => {
+            return { ...acc, [curr._id]: curr.count };
+        }, {});
+        return ratingResult;
+    };
     useEffect(() => {
         const getPost = async () => {
             await axios
@@ -18,11 +27,41 @@ const Post = () => {
                 .then((response) => {
                     const postDetail = response.data.Post;
                     setPost(postDetail);
+                    const ratingResult = reducerat(response.data.Rating);
+
+                    console.log('rating');
+                    console.log(ratingResult);
+                    setRating(ratingResult);
                 })
                 .catch((error) => console.log(error));
         };
         getPost();
     }, [id]);
+
+    const ratePost = async (score) => {
+        axios
+            .post(
+                'http://localhost:3000/api/posts/rating',
+                {
+                    id: post._id,
+                    score: score,
+                },
+                {
+                    headers: authHeader(),
+                }
+            )
+            .then((response) => {
+                const rating = reducerat(response.data.Rating);
+                setRating(rating);
+            })
+            .catch(() => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'You have to be logged in!',
+                });
+            });
+    };
     return (
         <div className="lg:flex-none xl:w-4/5 lg:w-3/4 py-8 px-4 mx-auto max-w-screen-xl lg:py-8 lg:px-4">
             <main className="pt-8 pb-16 lg:pb-24 bg-white">
@@ -45,7 +84,7 @@ const Post = () => {
                             className="w-full max-h-[32rem] mb-6"
                         />
                         <Article body={post.body} />
-                        <Rating />
+                        <Rating rating={rating} ratePost={ratePost} />
                         <Comments comments={post.comments} id={post._id} />
                     </article>
                 </div>

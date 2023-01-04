@@ -45,31 +45,59 @@ export const getAllPosts = async (req, res) => {
 
 export const getOnePost = async (req, res) => {
     const id = req.params.postid;
-    await Post.findById(id)
-        .populate('author category comments')
-        .populate([
-            {
-                path: 'comments',
-                options: { sort: { createdAt: -1 } },
-                populate: {
-                    path: 'user',
-                },
+    const aggregatorOpts = [
+        {
+            $match: {
+                _id: mongoose.Types.ObjectId(id),
             },
-        ])
-        .then((singlePost) => {
-            res.status(200).json({
-                success: true,
-                message: 'Single Post',
-                Post: singlePost,
-            });
-        })
-        .catch((err) => {
-            res.status(500).json({
-                success: false,
-                message: 'This post does not exist',
-                error: err.message,
-            });
+        },
+        {
+            $unwind: '$ratings',
+        },
+
+        {
+            $group: {
+                _id: '$ratings.score',
+                count: { $sum: 1 },
+            },
+        },
+    ];
+    try {
+        const singlePost = await Post.findById(id)
+            .populate('author category comments')
+            .populate([
+                {
+                    path: 'comments',
+                    options: { sort: { createdAt: -1 } },
+                    populate: {
+                        path: 'user',
+                    },
+                },
+            ]);
+
+        Post.aggregate(aggregatorOpts, (err, rating) => {
+            if (err) {
+                res.status(500).json({
+                    success: false,
+                    message: 'Something went wrong!',
+                    error: err.message,
+                });
+            } else {
+                res.status(200).json({
+                    success: true,
+                    message: 'Single Post',
+                    Post: singlePost,
+                    Rating: rating,
+                });
+            }
         });
+    } catch (e) {
+        res.status(500).json({
+            success: false,
+            message: 'This post does not exist',
+            error: err.message,
+        });
+    }
 };
 
 export const getMyPosts = async (req, res) => {
@@ -185,4 +213,101 @@ export const deletePost = async (req, res) => {
                 message: 'Server error. Please try again.',
             });
         });
+};
+
+export const ratePost = async (req, res) => {
+    const user = req.user;
+
+    const aggregatorOpts = [
+        {
+            $match: {
+                _id: mongoose.Types.ObjectId(req.body.id),
+            },
+        },
+        {
+            $unwind: '$ratings',
+        },
+
+        {
+            $group: {
+                _id: '$ratings.score',
+                count: { $sum: 1 },
+            },
+        },
+    ];
+    try {
+        const post = await Post.findById(req.body.id);
+        let alreadyRatedPost = post.ratings.find(
+            (rating) => rating.ratedBy.toString() == user.toString()
+        );
+        if (alreadyRatedPost) {
+            let unsetRating = post.ratings.find(
+                (rating) =>
+                    rating.score == req.body.score &&
+                    rating.ratedBy.toString() == user.toString()
+            );
+            if (unsetRating) {
+                await Post.updateOne(
+                    {
+                        _id: req.body.id,
+                    },
+                    {
+                        $pull: { ratings: { _id: unsetRating._id } },
+                    },
+                    {
+                        safe: true,
+                    }
+                );
+            } else {
+                await Post.updateOne(
+                    {
+                        ratings: { $elemMatch: alreadyRatedPost },
+                    },
+                    {
+                        $set: { 'ratings.$.score': req.body.score },
+                    },
+                    {
+                        new: true,
+                    }
+                );
+            }
+        } else {
+            await Post.findByIdAndUpdate(
+                req.body.id,
+                {
+                    $push: {
+                        ratings: {
+                            score: req.body.score,
+                            ratedBy: user,
+                        },
+                    },
+                },
+                {
+                    new: true,
+                }
+            );
+        }
+
+        Post.aggregate(aggregatorOpts, (err, rating) => {
+            if (err) {
+                res.status(500).json({
+                    success: false,
+                    message: 'Something went wrong!',
+                    error: err.message,
+                });
+            } else {
+                res.status(200).json({
+                    success: true,
+                    message: 'Success',
+                    Rating: rating,
+                });
+            }
+        });
+    } catch (e) {
+        console.log(e);
+        res.status(500).json({
+            success: false,
+            message: 'Server error. Please try again.',
+        });
+    }
 };

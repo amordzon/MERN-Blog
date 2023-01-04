@@ -6,6 +6,7 @@ import {
     getOnePost,
     updatePost,
     deletePost,
+    ratePost,
 } from '../controllers/post.controller.js';
 import { loggedIn } from '../middleware/auth.middleware.js';
 import upload from '../middleware/photo.middleware.js';
@@ -18,5 +19,6 @@ postRouter.post('/new', [loggedIn, upload.single('img')], createPost);
 postRouter.get('/:postid', getOnePost);
 postRouter.put('/:postid', [loggedIn, upload.single('img')], updatePost);
 postRouter.delete('/:postid', loggedIn, deletePost);
+postRouter.post('/rating', loggedIn, ratePost);
 
 export default postRouter;

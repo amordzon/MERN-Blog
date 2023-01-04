@@ -16,7 +16,7 @@ const CommentForm = ({ addComment, comm, updateComment }) => {
         enableReinitialize: true,
         validate,
         onSubmit: (values, { setSubmitting, resetForm }) => {
-            if (comm) {
+            if (comm.body) {
                 updateComment(comm._id, values, resetForm, setSubmitting);
             } else {
                 addComment(values, resetForm, setSubmitting);

@@ -8,12 +8,16 @@ import Moment from 'moment';
 import { useParams } from 'react-router-dom';
 import authHeader from '../../services/auth-header';
 import Swal from 'sweetalert2';
+import { useSelector } from 'react-redux';
 
 const Post = () => {
     const [post, setPost] = useState({});
     const [rating, setRating] = useState([]);
     const { id } = useParams();
-
+    const [currentRating, setCurrentRating] = useState('');
+    const { user: currentUser } = useSelector(
+        (state) => state.persistedReducer.auth
+    );
     const reducerat = (rating) => {
         const ratingResult = rating.reduce((acc, curr) => {
             return { ...acc, [curr._id]: curr.count };
@@ -27,10 +31,13 @@ const Post = () => {
                 .then((response) => {
                     const postDetail = response.data.Post;
                     setPost(postDetail);
+                    const ratUser = response.data.Post.ratings.filter(
+                        (rating) => {
+                            return rating.ratedBy == currentUser.user._id;
+                        }
+                    );
+                    setCurrentRating(ratUser[0]?.score);
                     const ratingResult = reducerat(response.data.Rating);
-
-                    console.log('rating');
-                    console.log(ratingResult);
                     setRating(ratingResult);
                 })
                 .catch((error) => console.log(error));
@@ -51,6 +58,7 @@ const Post = () => {
                 }
             )
             .then((response) => {
+                setCurrentRating(score);
                 const rating = reducerat(response.data.Rating);
                 setRating(rating);
             })
@@ -84,7 +92,11 @@ const Post = () => {
                             className="w-full max-h-[32rem] mb-6"
                         />
                         <Article body={post.body} />
-                        <Rating rating={rating} ratePost={ratePost} />
+                        <Rating
+                            rating={rating}
+                            ratePost={ratePost}
+                            currentRating={currentRating}
+                        />
                         <Comments comments={post.comments} id={post._id} />
                     </article>
                 </div>

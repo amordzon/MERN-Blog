@@ -6,23 +6,53 @@ export const getAllPosts = async (req, res) => {
     const order = req.query.order == '1' ? 1 : -1;
     const sort = { [sortBy]: order };
     if (sortBy && order) {
-        await Post.find()
-            .populate('author category')
-            .sort(sort)
-            .then((allPosts) => {
-                return res.status(200).json({
-                    success: true,
-                    message: 'All posts',
-                    Posts: allPosts,
-                });
-            })
-            .catch((err) => {
-                res.status(500).json({
-                    success: false,
-                    message: 'Server error',
-                    error: err.message,
-                });
+        if (sortBy == 'ratings') {
+            const aggregatorOpts = [
+                {
+                    $project: {
+                        title: 1,
+                        ratings: 1,
+                        ratingsLen: {
+                            $size: { $ifNull: ['$ratings', []] },
+                        },
+                    },
+                },
+                { $sort: { ratingsLen: -1 } },
+            ];
+            Post.aggregate(aggregatorOpts, (err, allPosts) => {
+                if (err) {
+                    res.status(500).json({
+                        success: false,
+                        message: 'Server error',
+                        error: err.message,
+                    });
+                } else {
+                    return res.status(200).json({
+                        success: true,
+                        message: 'All posts',
+                        Posts: allPosts,
+                    });
+                }
             });
+        } else {
+            await Post.find()
+                .populate('author category')
+                .sort(sort)
+                .then((allPosts) => {
+                    return res.status(200).json({
+                        success: true,
+                        message: 'All posts',
+                        Posts: allPosts,
+                    });
+                })
+                .catch((err) => {
+                    res.status(500).json({
+                        success: false,
+                        message: 'Server error',
+                        error: err.message,
+                    });
+                });
+        }
     } else {
         await Post.find()
             .populate('author category')

@@ -9,7 +9,7 @@ const PopularPosts = () => {
     useEffect(() => {
         const getPopularPosts = async () => {
             await axios
-                .get('http://localhost:3000/api/posts?sortBy=score&order=-1')
+                .get('http://localhost:3000/api/posts?sortBy=ratings&order=-1')
                 .then((response) => {
                     const popPosts = response.data.Posts;
                     setPopularPosts(popPosts.slice(0, 5));

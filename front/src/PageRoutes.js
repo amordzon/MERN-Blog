@@ -8,7 +8,6 @@ import Auth from './components/Auth/Auth';
 import Profile from './components/Profile/Profile';
 import MyPosts from './components/Profile/MyPosts';
 import Aside from './components/Profile/Aside';
-import Inbox from './components/Profile/Inbox';
 import NewEditPost from './components/Profile/NewEditPost';
 import SearchPage from './components/SearchPage';
 
@@ -25,7 +24,6 @@ const PageRoutes = () => {
                 <Route path="profile" element={<Aside />}>
                     <Route path="user" element={<Profile />} />
                     <Route path="myposts" element={<MyPosts />} />
-                    <Route path="inbox" element={<Inbox />} />
                     <Route path="newpost" element={<NewEditPost />} />
                     <Route path="editpost/:id" element={<NewEditPost />} />
                 </Route>

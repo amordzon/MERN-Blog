@@ -12,6 +12,8 @@ import chatRouter from './routes/chat.route.js';
 import authRouter from './routes/auth.route.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { Server } from 'socket.io';
+import http from 'http';
 
 dotenv.config();
 const app = express();
@@ -25,10 +27,18 @@ const corsOptions = {
         if (!origin || whitelist.indexOf(origin) !== -1) {
             callback(null, true);
         } else {
+            console.log(origin);
             callback(new Error('Not allowed by CORS'));
         }
     },
 };
+
+const server = http.createServer(app);
+const io = new Server(server, {
+    cors: {
+        origin: '*',
+    },
+});
 app.use(cors(corsOptions));
 mongoose.connect(
     'mongodb+srv://' +
@@ -59,7 +69,13 @@ app.use('/api/comments', commentRouter);
 app.use('/api/chat', chatRouter);
 app.use('/api/auth', authRouter);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+const NEW_CHAT_MESSAGE_EVENT = 'newChatMessage';
+io.on('connection', (socket) => {
+    socket.on(NEW_CHAT_MESSAGE_EVENT, (data) => {
+        io.emit(NEW_CHAT_MESSAGE_EVENT, data);
+    });
+});
 
-app.listen(process.env.PORT, () => {
+server.listen(process.env.PORT, () => {
     console.log(`Our server is running on port ${process.env.PORT}`);
 });

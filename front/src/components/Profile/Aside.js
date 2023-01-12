@@ -59,20 +59,6 @@ const Aside = () => {
                                 </span>
                             </Link>
                         </li>
-                        <li>
-                            <Link
-                                to="/profile/inbox"
-                                className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg hover:bg-gray-100"
-                            >
-                                <i className="fa-solid fa-inbox flex-shrink-0 text-gray-500 transition duration-75 group-hover:text-gray-900"></i>
-                                <span className="flex-1 ml-3 whitespace-nowrap ">
-                                    Inbox
-                                </span>
-                                <span className="inline-flex justify-center items-center p-3 ml-3 w-3 h-3 text-sm font-medium text-blue-600 bg-blue-200 rounded-full">
-                                    3
-                                </span>
-                            </Link>
-                        </li>
                         <li className="lg:fixed lg:bottom-0 lg:pb-2">
                             <a
                                 href="#"

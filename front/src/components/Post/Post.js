@@ -80,7 +80,10 @@ const Post = () => {
                                 {Moment(post.published_at).format('DD-MM-YYYY')}
                             </p>
                             <div className="flex flex-wrap items-center mb-6 not-italic">
-                                <Author author={post.author} />
+                                {post.author?.length &&
+                                    post.author.map((author, index) => (
+                                        <Author author={author} key={index} />
+                                    ))}
                             </div>
                             <h1 className="mb-4 text-3xl font-extrabold leading-tight text-gray-900 lg:mb-6 lg:text-4xl">
                                 {post.title}

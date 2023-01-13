@@ -5,9 +5,15 @@ import authHeader from '../../services/auth-header';
 import Swal from 'sweetalert2';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import Select from 'react-select';
+import { useSelector } from 'react-redux';
 
 const NewEditPost = () => {
+    const [usersOptions, setUsersOptions] = useState([]);
     const navigate = useNavigate();
+    const { user: currentUser } = useSelector(
+        (state) => state.persistedReducer.auth
+    );
     const { id } = useParams();
     const isAddMode = !id;
     const [diffCategory, setDiffCategory] = useState(false);
@@ -18,6 +24,7 @@ const NewEditPost = () => {
         categoryName: '',
         categoryDescription: '',
         img: '',
+        users: [],
     });
 
     const [categories, setCategories] = useState([]);
@@ -30,7 +37,27 @@ const NewEditPost = () => {
             categoryName: '',
             categoryDescription: '',
             img: '',
+            users: [],
         });
+        axios
+            .get('http://localhost:3000/api/users')
+            .then(function (response) {
+                const allUsers = response.data.User;
+                const allUsersReduce = allUsers.reduce((prev, curr) => {
+                    return [
+                        ...prev,
+                        {
+                            value: curr._id,
+                            label: curr.email,
+                        },
+                    ];
+                }, []);
+                setUsersOptions(allUsersReduce);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
         axios
             .get('http://localhost:3000/api/category')
             .then(function (response) {
@@ -43,6 +70,17 @@ const NewEditPost = () => {
         if (isAddMode == false) {
             axios.get('http://localhost:3000/api/posts/' + id).then((res) => {
                 const postValues = res.data.Post;
+                const selectedUsers = postValues.author.reduce((prev, curr) => {
+                    return currentUser.user._id == curr._id
+                        ? [...prev]
+                        : [
+                              ...prev,
+                              {
+                                  value: curr._id,
+                                  label: curr.email,
+                              },
+                          ];
+                }, []);
                 setPost({
                     title: postValues.title,
                     body: postValues.body,
@@ -50,6 +88,7 @@ const NewEditPost = () => {
                     categoryName: '',
                     categoryDescription: '',
                     img: postValues.img,
+                    users: selectedUsers,
                 });
                 console.log(res.data);
                 formik.setFieldValue('title', post.title, false);
@@ -98,6 +137,9 @@ const NewEditPost = () => {
             await createCategory(values, setSubmitting);
         }
         if (values.categoryName == '' && values.categoryDescription == '') {
+            const usersReduced = formik.values.users.reduce((prev, curr) => {
+                return [...prev, curr.value];
+            }, []);
             await axios
                 .put(
                     'http://localhost:3000/api/posts/' + id,
@@ -106,6 +148,7 @@ const NewEditPost = () => {
                         body: values.body,
                         img: values.img,
                         category: values.category,
+                        users: usersReduced,
                     },
                     {
                         headers: {
@@ -165,6 +208,9 @@ const NewEditPost = () => {
         }
         console.log(values);
         if (values.categoryName == '' && values.categoryDescription == '') {
+            const usersReduced = formik.values.users.reduce((prev, curr) => {
+                return [...prev, curr.value];
+            }, []);
             await axios
                 .post(
                     'http://localhost:3000/api/posts/new',
@@ -173,6 +219,7 @@ const NewEditPost = () => {
                         body: values.body,
                         img: values.img,
                         category: values.category,
+                        users: usersReduced,
                     },
                     {
                         headers: {
@@ -212,12 +259,19 @@ const NewEditPost = () => {
                                         Add users to collaborate with
                                     </label>
                                     <div className="mt-1 flex rounded-md shadow-sm">
-                                        <input
-                                            type="email"
+                                        <Select
+                                            isMulti
                                             name="users"
-                                            id="users"
+                                            options={usersOptions}
                                             className="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300"
-                                            placeholder="John@smith.com"
+                                            classNamePrefix="select"
+                                            value={formik.values.users}
+                                            onChange={(users) =>
+                                                formik.setFieldValue(
+                                                    'users',
+                                                    users
+                                                )
+                                            }
                                         />
                                     </div>
                                 </div>

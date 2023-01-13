@@ -152,10 +152,10 @@ export const getMyPosts = async (req, res) => {
 
 export const createPost = (req, res) => {
     const author = req.user;
-
+    const users = req.body.users ? [author, ...req.body.users] : [author];
     const post = new Post({
         _id: mongoose.Types.ObjectId(),
-        author: author,
+        author: users,
         title: req.body.title,
         body: req.body.body,
         img:
@@ -185,6 +185,7 @@ export const createPost = (req, res) => {
 };
 
 export const updatePost = async (req, res) => {
+    const author = req.user;
     const id = req.params.postid;
     let updateObject = req.body;
     updateObject.img = updateObject.img
@@ -194,7 +195,11 @@ export const updatePost = async (req, res) => {
           req.get('host') +
           '/uploads/' +
           req.file.filename;
+    updateObject.author = updateObject.users
+        ? [author, ...updateObject.users]
+        : [author];
 
+    delete updateObject.users;
     await Post.update({ _id: id }, { $set: updateObject })
         .exec()
         .then(() => {
@@ -217,7 +222,7 @@ export const deletePost = async (req, res) => {
     const userId = req.user;
     await Post.findById(id)
         .then((post) => {
-            if (post.author == userId) {
+            if (post.author.includes(userId)) {
                 post.remove()
                     .then(() =>
                         res.status(204).json({

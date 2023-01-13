@@ -14,9 +14,18 @@ const Post = ({ post, myPosts, handleDelete }) => {
     const sanitizedData = () => ({
         __html: DOMPurify.sanitize(truncate(post.body)),
     });
+
+    const authorFound = post.author.some((aut) => {
+        if (currentUser?.user?._id == aut._id) {
+            return true;
+        } else {
+            return false;
+        }
+    });
+
     return (
         <article className="p-6 bg-white rounded-lg border border-gray-200 shadow-md ">
-            {currentUser?.user?._id == post.author._id && myPosts && (
+            {authorFound && myPosts && (
                 <>
                     <Link to={`/profile/editpost/${post._id}`}>
                         <button className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded">
@@ -59,12 +68,18 @@ const Post = ({ post, myPosts, handleDelete }) => {
                 ></div>
             </p>
             <div className="flex justify-between items-center">
-                <div className="flex items-center space-x-4">
-                    <div className="w-6 h-6 mx-auto bg-blue-500 rounded-full"></div>
-                    <span className="font-medium">
-                        {post.author.name} {post.author.surname}
-                    </span>
-                </div>
+                {post.author?.length &&
+                    post.author.map((author, index) => (
+                        <div
+                            className="flex items-center space-x-4"
+                            key={index}
+                        >
+                            <div className="w-6 h-6 mx-auto bg-blue-500 rounded-full"></div>
+                            <span className="font-medium">
+                                {author.name} {author.surname}
+                            </span>
+                        </div>
+                    ))}
                 <Link
                     to={`/post/${post._id}`}
                     className="inline-flex items-center font-medium text-primary-600 hover:underline"

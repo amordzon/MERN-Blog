@@ -19,13 +19,18 @@ const SearchPage = () => {
                 post.category.name
                     .toLowerCase()
                     .indexOf(searchedText.toLowerCase()) >= 0 ||
-                (
-                    post.author.name.toLowerCase() +
-                    ' ' +
-                    post.author.surname.toLowerCase()
-                ).indexOf(searchedText.toLowerCase()) >= 0
+                post.author.some((au) => {
+                    return (
+                        (
+                            au.name.toLowerCase() +
+                            ' ' +
+                            au.surname.toLowerCase()
+                        ).indexOf(searchedText.toLowerCase()) >= 0
+                    );
+                })
             );
         });
+        console.log(filtPosts);
         setFilteredPosts(filtPosts);
     }, [searchedText]);
 

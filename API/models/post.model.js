@@ -5,7 +5,7 @@ mongoose.Promise = global.Promise;
 const PostSchema = new mongoose.Schema(
     {
         _id: mongoose.Schema.Types.ObjectId,
-        author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+        author: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
         title: {
             type: String,
             required: true,

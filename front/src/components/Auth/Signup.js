@@ -4,7 +4,6 @@ import { useFormik } from 'formik';
 import { useNavigate } from 'react-router-dom';
 import { loggedIn } from '../../slices/authSlice';
 import { register } from '../../services/auth.service';
-import authHeader from '../../services/auth-header';
 
 const Signup = ({ isLogin }) => {
     const [passwordStr, setPasswordStr] = useState('');
@@ -79,7 +78,6 @@ const Signup = ({ isLogin }) => {
                     dispatch(loggedIn(response.User));
                     navigate('/profile/myposts');
                     setSubmitting(false);
-                    authHeader(response.User.token);
                 })
                 .catch((error) => {
                     setMessage(() => error.response.data.message);

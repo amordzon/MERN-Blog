@@ -14,6 +14,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { Server } from 'socket.io';
 import http from 'http';
+import Chat from './models/chat.model.js';
 
 dotenv.config();
 const app = express();
@@ -70,9 +71,28 @@ app.use('/api/chat', chatRouter);
 app.use('/api/auth', authRouter);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 const NEW_CHAT_MESSAGE_EVENT = 'newChatMessage';
+const GET_CHAT_MESSAGES_EVENT = 'getChatMessages';
 io.on('connection', (socket) => {
+    Chat.find({})
+        .populate('user')
+        .then((messages) => {
+            io.emit(GET_CHAT_MESSAGES_EVENT, messages);
+        });
+
     socket.on(NEW_CHAT_MESSAGE_EVENT, (data) => {
-        io.emit(NEW_CHAT_MESSAGE_EVENT, data);
+        const chatmessage = new Chat({
+            _id: mongoose.Types.ObjectId(),
+            user: data.user,
+            message: data.body,
+        });
+        chatmessage
+            .save()
+            .then(() => {
+                io.emit(NEW_CHAT_MESSAGE_EVENT, data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     });
 });
 

@@ -2,13 +2,14 @@ import React, { useRef, useEffect } from 'react';
 
 const Messages = ({ messages }) => {
     const elementRef = useRef();
-    useEffect(() =>
+    useEffect(() => {
+        const { scrollX, scrollY } = window;
         elementRef.current.scrollIntoView({
-            behavior: 'smooth',
             block: 'nearest',
             inline: 'start',
-        })
-    );
+        });
+        window.scrollTo(scrollX, scrollY);
+    }, [messages]);
     return (
         <div className="flex flex-col flex-grow h-0 p-4 overflow-auto">
             {messages.length > 0 ? (

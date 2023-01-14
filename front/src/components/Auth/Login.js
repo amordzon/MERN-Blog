@@ -4,7 +4,6 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { loggedIn } from '../../slices/authSlice';
 import { login } from '../../services/auth.service';
-import authHeader from '../../services/auth-header';
 
 const Login = ({ isLogin }) => {
     let navigate = useNavigate();
@@ -36,7 +35,6 @@ const Login = ({ isLogin }) => {
                     dispatch(loggedIn(response.User));
                     navigate('/profile/myposts');
                     setSubmitting(false);
-                    authHeader(response.User.token);
                 })
                 .catch((error) => {
                     setMessage(() => error.response.data.message);

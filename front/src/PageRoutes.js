@@ -10,11 +10,18 @@ import MyPosts from './components/Profile/MyPosts';
 import Aside from './components/Profile/Aside';
 import NewEditPost from './components/Profile/NewEditPost';
 import SearchPage from './components/SearchPage';
+import AdminSide from './components/Admin/AdminSide';
+import AdminLogin from './components/Admin/AdminLogin';
+import AdminDashboard from './components/Admin/AdminDashboard';
 
 const PageRoutes = () => {
     return (
         <>
             <Routes>
+                <Route path="admin" element={<AdminSide />}>
+                    <Route path="login" element={<AdminLogin />} />
+                    <Route path="dashboard" element={<AdminDashboard />} />
+                </Route>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/category/:slug" element={<Category />} />
                 <Route path="/others" element={<Others />} />

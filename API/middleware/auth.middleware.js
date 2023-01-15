@@ -36,6 +36,7 @@ export const loggedIn = (req, res, next) => {
                 return res.status(401).json({ msg: 'Token is not valid' });
             } else {
                 req.user = decoded.id;
+                req.role = decoded.role;
                 next();
             }
         });

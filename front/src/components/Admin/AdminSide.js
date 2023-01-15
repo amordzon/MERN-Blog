@@ -29,7 +29,7 @@ const AdminSide = () => {
     return (
         <>
             {isLogged && currentUser?.user.role == 'admin' && (
-                <aside className=" xl:w-1/5 lg:w-1/4 lg:h-screen lg:sticky lg:top-20 mt-2">
+                <aside className=" xl:w-1/5 lg:w-1/4 lg:h-screen lg:sticky lg:top-16 mt-2">
                     <div className="overflow-y-auto py-2 px-3 bg-gray-50 lg:h-screen  shadow rounded">
                         <span className="self-center text-xl font-semibold whitespace-nowrap">
                             {currentUser.user.name} {currentUser.user.surname}

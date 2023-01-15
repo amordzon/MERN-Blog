@@ -11,7 +11,9 @@ const HomePage = () => {
     useEffect(() => {
         const getAllPosts = async () => {
             await axios
-                .get('http://localhost:3000/api/posts')
+                .get(
+                    'http://localhost:3000/api/posts?sortBy=createdAt&order=-1'
+                )
                 .then((response) => {
                     const allPosts = response.data.Posts;
                     dispatch(setBlogPosts(allPosts));

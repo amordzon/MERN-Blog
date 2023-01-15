@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import Select from 'react-select';
 import { useSelector } from 'react-redux';
 
-const NewEditPost = () => {
+const NewEditPost = ({ admin = false }) => {
     const [usersOptions, setUsersOptions] = useState([]);
     const navigate = useNavigate();
     const { user: currentUser } = useSelector(
@@ -159,7 +159,11 @@ const NewEditPost = () => {
                 )
                 .then(function (response) {
                     Swal.fire('Success!', response.data.message, 'success');
-                    navigate('/profile/newpost');
+                    if (admin) {
+                        navigate('/admin/posts');
+                    } else {
+                        navigate('/profile/newpost');
+                    }
                 })
                 .catch(function (error) {
                     Swal.fire({

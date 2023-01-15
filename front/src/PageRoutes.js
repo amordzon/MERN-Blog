@@ -13,6 +13,7 @@ import SearchPage from './components/SearchPage';
 import AdminSide from './components/Admin/AdminSide';
 import AdminLogin from './components/Admin/AdminLogin';
 import AdminDashboard from './components/Admin/AdminDashboard';
+import AdminPosts from './components/Admin/Posts/AdminPosts';
 
 const PageRoutes = () => {
     return (
@@ -21,6 +22,15 @@ const PageRoutes = () => {
                 <Route path="admin" element={<AdminSide />}>
                     <Route path="login" element={<AdminLogin />} />
                     <Route path="dashboard" element={<AdminDashboard />} />
+                    <Route path="posts" element={<AdminPosts />} />
+                    <Route
+                        path="newpost"
+                        element={<NewEditPost admin={true} />}
+                    />
+                    <Route
+                        path="editpost/:id"
+                        element={<NewEditPost admin={true} />}
+                    />
                 </Route>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/category/:slug" element={<Category />} />

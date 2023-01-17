@@ -42,7 +42,7 @@ const NewEditPost = ({ admin = false }) => {
         axios
             .get('http://localhost:3000/api/users')
             .then(function (response) {
-                const allUsers = response.data.User;
+                const allUsers = response.data.Users;
                 const allUsersReduce = allUsers.reduce((prev, curr) => {
                     return [
                         ...prev,

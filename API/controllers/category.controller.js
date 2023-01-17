@@ -24,14 +24,13 @@ export const getAllCategories = async (req, res) => {
 export const getOneCategory = async (req, res) => {
     const slug = req.params.categoryslug;
     await Category.findOne({ slug: slug })
-        .populate([
-            {
-                path: 'posts',
-                populate: {
-                    path: 'author category',
-                },
+        .populate({
+            path: 'posts',
+            options: { sort: { createdAt: -1 } },
+            populate: {
+                path: 'author category',
             },
-        ])
+        })
         .then((singleCategory) => {
             res.status(200).json({
                 success: true,

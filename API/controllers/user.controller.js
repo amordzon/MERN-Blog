@@ -8,7 +8,7 @@ export const getAllUsers = async (req, res) => {
             return res.status(200).json({
                 success: true,
                 message: 'All users',
-                User: allUsers,
+                Users: allUsers,
             });
         })
         .catch((err) => {
@@ -43,7 +43,10 @@ export const createUser = async (req, res) => {
     const hashedPwd = await bcrypt.hash(req.body.password, 10);
     User.find({ email: req.body.email }, (err, users) => {
         if (users.length) {
-            return res.sendStatus(409);
+            res.status(500).json({
+                success: false,
+                message: 'This user already exists',
+            });
         } else {
             const user = new User({
                 _id: mongoose.Types.ObjectId(),
@@ -71,6 +74,41 @@ export const createUser = async (req, res) => {
                 });
         }
     });
+};
+
+export const updateUser = async (req, res) => {
+    const id = req.params.userid;
+
+    const val = req.body.password
+        ? {
+              password: await bcrypt.hash(req.body.password, 10),
+              email: req.body.email,
+              name: req.body.name,
+              surname: req.body.surname,
+              role: req.body.role,
+          }
+        : {
+              email: req.body.email,
+              name: req.body.name,
+              surname: req.body.surname,
+              role: req.body.role,
+          };
+    await User.findByIdAndUpdate(id, val, { new: true })
+        .then((user) => {
+            res.status(200).json({
+                success: true,
+                message: 'User is updated',
+                User: {
+                    user: user,
+                },
+            });
+        })
+        .catch((err) => {
+            res.status(500).json({
+                success: false,
+                message: 'Server error. Please try again.',
+            });
+        });
 };
 
 export const updateUserWithToken = async (req, res) => {

@@ -14,6 +14,8 @@ import AdminSide from './components/Admin/AdminSide';
 import AdminLogin from './components/Admin/AdminLogin';
 import AdminDashboard from './components/Admin/AdminDashboard';
 import AdminPosts from './components/Admin/Posts/AdminPosts';
+import AdminUsers from './components/Admin/Users/AdminUsers';
+import AdminAddEditUsers from './components/Admin/Users/AdminAddEditUsers';
 
 const PageRoutes = () => {
     return (
@@ -30,6 +32,12 @@ const PageRoutes = () => {
                     <Route
                         path="editpost/:id"
                         element={<NewEditPost admin={true} />}
+                    />
+                    <Route path="users" element={<AdminUsers />} />
+                    <Route path="newuser" element={<AdminAddEditUsers />} />
+                    <Route
+                        path="edituser/:id"
+                        element={<AdminAddEditUsers />}
                     />
                 </Route>
                 <Route path="/" element={<HomePage />} />

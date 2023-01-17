@@ -9,15 +9,12 @@ const MyPosts = () => {
     const [myPosts, setMyPosts] = useState([]);
     const getMyPosts = async () => {
         await axios
-            .get('http://localhost:3000/api/posts/myposts', {
+            .get(`${process.env.REACT_APP_API}/api/posts/myposts`, {
                 headers: authHeader(),
             })
             .then((response) => {
                 const posts = response.data.Posts;
                 setMyPosts(posts);
-            })
-            .catch((error) => {
-                console.log(error);
             });
     };
     useEffect(() => {
@@ -36,10 +33,10 @@ const MyPosts = () => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 await axios
-                    .delete('http://localhost:3000/api/posts/' + id, {
+                    .delete(`${process.env.REACT_APP_API}/api/posts/${id}`, {
                         headers: authHeader(),
                     })
-                    .then((response) => {
+                    .then(() => {
                         const newPosts = myPosts.filter(
                             (post) => post._id != id
                         );
@@ -49,7 +46,6 @@ const MyPosts = () => {
                             'Your post has been deleted.',
                             'success'
                         );
-                        console.log(response);
                     })
                     .catch((error) => {
                         Swal.fire({

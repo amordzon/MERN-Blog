@@ -28,7 +28,7 @@ const Comments = ({ comments = [], id = '' }) => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 await axios
-                    .delete('http://localhost:3000/api/comments/' + id, {
+                    .delete(`${process.env.REACT_APP_API}/api/comments/${id}`, {
                         headers: authHeader(),
                     })
                     .then(() => {
@@ -62,7 +62,6 @@ const Comments = ({ comments = [], id = '' }) => {
         ));
     }, [comm]);
     useLayoutEffect(() => {
-        console.log(comments);
         if (comm.length == 0) {
             setComm(comments);
         }
@@ -70,7 +69,7 @@ const Comments = ({ comments = [], id = '' }) => {
     const addComment = async (values, reset, setSubmitting) => {
         axios
             .post(
-                'http://localhost:3000/api/comments/new',
+                `${process.env.REACT_APP_API}/api/comments/new`,
                 {
                     user: currentUser?.user._id,
                     body: values.body,
@@ -97,7 +96,7 @@ const Comments = ({ comments = [], id = '' }) => {
     const updateComment = async (commentid, values, reset, setSubmitting) => {
         axios
             .put(
-                'http://localhost:3000/api/comments/' + commentid,
+                `${process.env.REACT_APP_API}/api/comments/${commentid}`,
                 {
                     user: currentUser?.user._id,
                     body: values.body,

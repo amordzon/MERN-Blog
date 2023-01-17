@@ -1,6 +1,6 @@
 import axios from 'axios';
 import authHeader from './auth-header';
-const API_URL = 'http://localhost:3000/api/auth/';
+const API_URL = `${process.env.REACT_APP_API}/api/auth/`;
 
 export const register = (email, name, surname, password) => {
     return axios
@@ -29,7 +29,7 @@ export const login = (email, password) => {
 export const update = (email, name, surname, password, oldpassword) => {
     return axios
         .put(
-            'http://localhost:3000/api/users/updatewithtoken',
+            `${process.env.REACT_APP_API}/api/users/updatewithtoken`,
             {
                 email,
                 name,

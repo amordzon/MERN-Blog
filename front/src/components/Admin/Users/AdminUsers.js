@@ -11,13 +11,11 @@ const AdminUsers = () => {
     useEffect(() => {
         const getAllUsers = async () => {
             await axios
-                .get('http://localhost:3000/api/users')
+                .get(`${process.env.REACT_APP_API}/api/users`)
                 .then((response) => {
                     const allUsers = response.data.Users;
-                    console.log(allUsers);
                     setUsers(allUsers);
-                })
-                .catch((error) => console.log(error));
+                });
         };
 
         getAllUsers();
@@ -35,10 +33,10 @@ const AdminUsers = () => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 await axios
-                    .delete('http://localhost:3000/api/users/' + id, {
+                    .delete(`${process.env.REACT_APP_API}/api/users/${id}`, {
                         headers: authHeader(),
                     })
-                    .then((response) => {
+                    .then(() => {
                         const newUsers = users.filter((user) => user._id != id);
                         setUsers(newUsers);
                         Swal.fire(
@@ -46,7 +44,6 @@ const AdminUsers = () => {
                             'User has been deleted.',
                             'success'
                         );
-                        console.log(response);
                     })
                     .catch((error) => {
                         Swal.fire({

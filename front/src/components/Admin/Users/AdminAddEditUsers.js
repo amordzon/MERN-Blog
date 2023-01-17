@@ -28,23 +28,24 @@ const AdminAddEditUsers = () => {
             role: 'normal',
         });
         if (isAddMode == false) {
-            axios.get('http://localhost:3000/api/users/' + id).then((res) => {
-                const userValues = res.data.User;
+            axios
+                .get(`${process.env.REACT_APP_API}/api/users/${id}`)
+                .then((res) => {
+                    const userValues = res.data.User;
 
-                setInitUserVal({
-                    email: userValues.email,
-                    name: userValues.name,
-                    surname: userValues.surname,
-                    password: '',
-                    confirmpassword: '',
-                    role: userValues.role,
+                    setInitUserVal({
+                        email: userValues.email,
+                        name: userValues.name,
+                        surname: userValues.surname,
+                        password: '',
+                        confirmpassword: '',
+                        role: userValues.role,
+                    });
+                    formik.setFieldValue('email', initUserVal.email, false);
+                    formik.setFieldValue('name', initUserVal.name, false);
+                    formik.setFieldValue('surname', initUserVal.surname, false);
+                    formik.setFieldValue('role', initUserVal.role, false);
                 });
-                console.log(res.data);
-                formik.setFieldValue('email', initUserVal.email, false);
-                formik.setFieldValue('name', initUserVal.name, false);
-                formik.setFieldValue('surname', initUserVal.surname, false);
-                formik.setFieldValue('role', initUserVal.role, false);
-            });
         }
     }, [id]);
     const validate = (values) => {
@@ -104,7 +105,7 @@ const AdminAddEditUsers = () => {
             if (isAddMode) {
                 axios
                     .post(
-                        'http://localhost:3000/api/users/new',
+                        `${process.env.REACT_APP_API}/api/users/new`,
                         {
                             email: values.email,
                             name: values.name,
@@ -126,7 +127,6 @@ const AdminAddEditUsers = () => {
                         setSubmitting(false);
                     })
                     .catch(function (error) {
-                        console.log(error);
                         Swal.fire({
                             icon: 'error',
                             title: 'Oops...',
@@ -137,7 +137,7 @@ const AdminAddEditUsers = () => {
             } else {
                 axios
                     .put(
-                        'http://localhost:3000/api/users/' + id,
+                        `${process.env.REACT_APP_API}/api/users/${id}`,
                         {
                             email: values.email,
                             name: values.name,
@@ -159,7 +159,6 @@ const AdminAddEditUsers = () => {
                         setSubmitting(false);
                     })
                     .catch(function (error) {
-                        console.log(error);
                         Swal.fire({
                             icon: 'error',
                             title: 'Oops...',

@@ -29,7 +29,6 @@ const NewEditPost = ({ admin = false }) => {
 
     const [categories, setCategories] = useState([]);
     useEffect(() => {
-        console.log(12223);
         setPost({
             title: '',
             body: '',
@@ -40,7 +39,7 @@ const NewEditPost = ({ admin = false }) => {
             users: [],
         });
         axios
-            .get('http://localhost:3000/api/users')
+            .get(`${process.env.REACT_APP_API}/api/users`)
             .then(function (response) {
                 const allUsers = response.data.Users;
                 const allUsersReduce = allUsers.reduce((prev, curr) => {
@@ -53,49 +52,47 @@ const NewEditPost = ({ admin = false }) => {
                     ];
                 }, []);
                 setUsersOptions(allUsersReduce);
-            })
-            .catch(function (error) {
-                console.log(error);
             });
 
         axios
-            .get('http://localhost:3000/api/category')
+            .get(`${process.env.REACT_APP_API}/api/category`)
             .then(function (response) {
                 const allCategories = response.data.Categories;
                 setCategories(allCategories);
-            })
-            .catch(function (error) {
-                console.log(error);
             });
         if (isAddMode == false) {
-            axios.get('http://localhost:3000/api/posts/' + id).then((res) => {
-                const postValues = res.data.Post;
-                const selectedUsers = postValues.author.reduce((prev, curr) => {
-                    return currentUser.user._id == curr._id
-                        ? [...prev]
-                        : [
-                              ...prev,
-                              {
-                                  value: curr._id,
-                                  label: curr.email,
-                              },
-                          ];
-                }, []);
-                setPost({
-                    title: postValues.title,
-                    body: postValues.body,
-                    category: postValues.category._id,
-                    categoryName: '',
-                    categoryDescription: '',
-                    img: postValues.img,
-                    users: selectedUsers,
+            axios
+                .get(`${process.env.REACT_APP_API}/api/posts/${id}`)
+                .then((res) => {
+                    const postValues = res.data.Post;
+                    const selectedUsers = postValues.author.reduce(
+                        (prev, curr) => {
+                            return currentUser.user._id == curr._id
+                                ? [...prev]
+                                : [
+                                      ...prev,
+                                      {
+                                          value: curr._id,
+                                          label: curr.email,
+                                      },
+                                  ];
+                        },
+                        []
+                    );
+                    setPost({
+                        title: postValues.title,
+                        body: postValues.body,
+                        category: postValues.category._id,
+                        categoryName: '',
+                        categoryDescription: '',
+                        img: postValues.img,
+                        users: selectedUsers,
+                    });
+                    formik.setFieldValue('title', post.title, false);
+                    formik.setFieldValue('body', post.body, false);
+                    formik.setFieldValue('category', post.category._id, false);
+                    formik.setFieldValue('img', post.img, false);
                 });
-                console.log(res.data);
-                formik.setFieldValue('title', post.title, false);
-                formik.setFieldValue('body', post.body, false);
-                formik.setFieldValue('category', post.category._id, false);
-                formik.setFieldValue('img', post.img, false);
-            });
         }
     }, [id]);
     const validate = (values) => {
@@ -123,7 +120,6 @@ const NewEditPost = ({ admin = false }) => {
         enableReinitialize: true,
         validate,
         onSubmit: async (values, { setSubmitting, resetForm }) => {
-            console.log(values);
             if (isAddMode) {
                 createPost(values, resetForm, setSubmitting);
             } else {
@@ -142,7 +138,7 @@ const NewEditPost = ({ admin = false }) => {
             }, []);
             await axios
                 .put(
-                    'http://localhost:3000/api/posts/' + id,
+                    `${process.env.REACT_APP_API}/api/posts/${id}`,
                     {
                         title: values.title,
                         body: values.body,
@@ -180,7 +176,7 @@ const NewEditPost = ({ admin = false }) => {
     const createCategory = async (values, setSubmitting) => {
         await axios
             .post(
-                'http://localhost:3000/api/category/new',
+                `${process.env.REACT_APP_API}/api/category/new`,
                 {
                     name: values.categoryName,
                     description: values.categoryDescription,
@@ -193,10 +189,8 @@ const NewEditPost = ({ admin = false }) => {
                 values.category = response.data.Category._id;
                 values.categoryName = '';
                 values.categoryDescription = '';
-                console.log(values);
             })
             .catch(function (error) {
-                console.log(error);
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
@@ -210,14 +204,13 @@ const NewEditPost = ({ admin = false }) => {
         if (diffCategory) {
             await createCategory(values, setSubmitting);
         }
-        console.log(values);
         if (values.categoryName == '' && values.categoryDescription == '') {
             const usersReduced = formik.values.users.reduce((prev, curr) => {
                 return [...prev, curr.value];
             }, []);
             await axios
                 .post(
-                    'http://localhost:3000/api/posts/new',
+                    `${process.env.REACT_APP_API}/api/posts/new`,
                     {
                         title: values.title,
                         body: values.body,

@@ -18,8 +18,6 @@ const AdminSide = () => {
         dispatch(loggedOut());
         navigate('/');
     };
-    console.log(currentUser);
-    console.log(isLogged);
     if (
         (!isLogged && !adminLogin) ||
         (currentUser?.user.role != 'admin' && !adminLogin)

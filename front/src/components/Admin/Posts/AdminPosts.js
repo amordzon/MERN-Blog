@@ -13,13 +13,11 @@ const AdminPosts = () => {
     useEffect(() => {
         const getAllPosts = async () => {
             await axios
-                .get('http://localhost:3000/api/posts')
+                .get(`${process.env.REACT_APP_API}/api/posts`)
                 .then((response) => {
                     const allPosts = response.data.Posts;
-                    console.log(allPosts);
                     dispatch(setBlogPosts(allPosts));
-                })
-                .catch((error) => console.log(error));
+                });
         };
 
         getAllPosts();
@@ -37,10 +35,10 @@ const AdminPosts = () => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 await axios
-                    .delete('http://localhost:3000/api/posts/' + id, {
+                    .delete(`${process.env.REACT_APP_API}/api/posts/${id}`, {
                         headers: authHeader(),
                     })
-                    .then((response) => {
+                    .then(() => {
                         const newPosts = blogPosts.filter(
                             (post) => post._id != id
                         );
@@ -50,7 +48,6 @@ const AdminPosts = () => {
                             'Your post has been deleted.',
                             'success'
                         );
-                        console.log(response);
                     })
                     .catch((error) => {
                         Swal.fire({

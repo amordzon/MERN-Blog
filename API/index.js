@@ -22,7 +22,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-const whitelist = ['http://localhost:3001', 'http://localhost:3000'];
+const whitelist = [process.env.FRONT];
 const corsOptions = {
     credentials: true,
     origin: function (origin, callback) {

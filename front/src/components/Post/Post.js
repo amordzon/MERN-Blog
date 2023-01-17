@@ -27,7 +27,7 @@ const Post = () => {
     useEffect(() => {
         const getPost = async () => {
             await axios
-                .get('http://localhost:3000/api/posts/' + id)
+                .get(`${process.env.REACT_APP_API}/api/posts/${id}`)
                 .then((response) => {
                     const postDetail = response.data.Post;
                     setPost(postDetail);
@@ -39,8 +39,7 @@ const Post = () => {
                     setCurrentRating(ratUser[0]?.score);
                     const ratingResult = reducerat(response.data.Rating);
                     setRating(ratingResult);
-                })
-                .catch((error) => console.log(error));
+                });
         };
         getPost();
     }, [id]);
@@ -48,7 +47,7 @@ const Post = () => {
     const ratePost = async (score) => {
         axios
             .post(
-                'http://localhost:3000/api/posts/rating',
+                `${process.env.REACT_APP_API}/api/posts/rating`,
                 {
                     id: post._id,
                     score: score,

@@ -12,15 +12,12 @@ const AdminDashboard = () => {
     });
     const getStatistics = async () => {
         await axios
-            .get('http://localhost:3000/api/admin/statistics', {
+            .get(`${process.env.REACT_APP_API}/api/admin/statistics`, {
                 headers: authHeader(),
             })
             .then((response) => {
                 const stat = response.data.Statistics;
                 setStatistics(stat);
-            })
-            .catch((error) => {
-                console.log(error);
             });
     };
     useEffect(() => {

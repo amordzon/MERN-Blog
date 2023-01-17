@@ -15,7 +15,7 @@ userRouter.get('/', getAllUsers);
 userRouter.post('/new', adminAuth, createUser);
 userRouter.get('/:userid', getOneUser);
 userRouter.put('/:userid', adminAuth, updateUser);
-userRouter.put('/updatewithtoken', loggedIn, updateUserWithToken);
+userRouter.put('/update/updatewithtoken', loggedIn, updateUserWithToken);
 userRouter.delete('/:userid', adminAuth, deleteUser);
 
 export default userRouter;

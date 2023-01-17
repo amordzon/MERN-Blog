@@ -29,7 +29,7 @@ export const login = (email, password) => {
 export const update = (email, name, surname, password, oldpassword) => {
     return axios
         .put(
-            `${process.env.REACT_APP_API}/api/users/updatewithtoken`,
+            `${process.env.REACT_APP_API}/api/users/update/updatewithtoken`,
             {
                 email,
                 name,

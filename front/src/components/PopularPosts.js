@@ -9,7 +9,9 @@ const PopularPosts = () => {
     useEffect(() => {
         const getPopularPosts = async () => {
             await axios
-                .get('http://localhost:3000/api/posts?sortBy=ratings&order=-1')
+                .get(
+                    `${process.env.REACT_APP_API}/api/posts?sortBy=ratings&order=-1`
+                )
                 .then((response) => {
                     const popPosts = response.data.Posts;
                     setPopularPosts(popPosts.slice(0, 5));
@@ -19,7 +21,7 @@ const PopularPosts = () => {
     }, []);
     return (
         <div className="mt-12 mx-4 ">
-            <h3 className="font-bold text-gray-900">NAJPOPULARNIEJSZE WPISY</h3>
+            <h3 className="font-bold text-gray-900">POPULAR ARTICLES</h3>
             <div className="mt-2">
                 <ul>
                     {popularPosts.length > 0 &&

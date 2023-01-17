@@ -11,7 +11,7 @@ const AdminUsers = () => {
     useEffect(() => {
         const getAllUsers = async () => {
             await axios
-                .get('http://localhost:3000/api/users')
+                .get(`${process.env.REACT_APP_API}/api/users`)
                 .then((response) => {
                     const allUsers = response.data.Users;
                     setUsers(allUsers);
@@ -33,7 +33,7 @@ const AdminUsers = () => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 await axios
-                    .delete('http://localhost:3000/api/users/' + id, {
+                    .delete(`${process.env.REACT_APP_API}/api/users/${id}`, {
                         headers: authHeader(),
                     })
                     .then(() => {

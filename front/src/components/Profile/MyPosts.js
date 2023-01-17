@@ -9,7 +9,7 @@ const MyPosts = () => {
     const [myPosts, setMyPosts] = useState([]);
     const getMyPosts = async () => {
         await axios
-            .get('http://localhost:3000/api/posts/myposts', {
+            .get(`${process.env.REACT_APP_API}/api/posts/myposts`, {
                 headers: authHeader(),
             })
             .then((response) => {
@@ -33,7 +33,7 @@ const MyPosts = () => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 await axios
-                    .delete('http://localhost:3000/api/posts/' + id, {
+                    .delete(`${process.env.REACT_APP_API}/api/posts/${id}`, {
                         headers: authHeader(),
                     })
                     .then(() => {

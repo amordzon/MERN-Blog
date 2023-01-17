@@ -4,7 +4,7 @@ import Moment from 'moment';
 
 const NEW_CHAT_MESSAGE_EVENT = 'newChatMessage';
 const GET_CHAT_MESSAGES_EVENT = 'getChatMessages';
-const SOCKET_SERVER_URL = 'http://localhost:3000';
+const SOCKET_SERVER_URL = `${process.env.REACT_APP_API}`;
 
 const useChat = (user) => {
     const [messages, setMessages] = useState([]);

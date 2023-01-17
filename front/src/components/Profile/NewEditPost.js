@@ -38,54 +38,61 @@ const NewEditPost = ({ admin = false }) => {
             img: '',
             users: [],
         });
-        axios.get('http://localhost:3000/api/users').then(function (response) {
-            const allUsers = response.data.Users;
-            const allUsersReduce = allUsers.reduce((prev, curr) => {
-                return [
-                    ...prev,
-                    {
-                        value: curr._id,
-                        label: curr.email,
-                    },
-                ];
-            }, []);
-            setUsersOptions(allUsersReduce);
-        });
+        axios
+            .get(`${process.env.REACT_APP_API}/api/users`)
+            .then(function (response) {
+                const allUsers = response.data.Users;
+                const allUsersReduce = allUsers.reduce((prev, curr) => {
+                    return [
+                        ...prev,
+                        {
+                            value: curr._id,
+                            label: curr.email,
+                        },
+                    ];
+                }, []);
+                setUsersOptions(allUsersReduce);
+            });
 
         axios
-            .get('http://localhost:3000/api/category')
+            .get(`${process.env.REACT_APP_API}/api/category`)
             .then(function (response) {
                 const allCategories = response.data.Categories;
                 setCategories(allCategories);
             });
         if (isAddMode == false) {
-            axios.get('http://localhost:3000/api/posts/' + id).then((res) => {
-                const postValues = res.data.Post;
-                const selectedUsers = postValues.author.reduce((prev, curr) => {
-                    return currentUser.user._id == curr._id
-                        ? [...prev]
-                        : [
-                              ...prev,
-                              {
-                                  value: curr._id,
-                                  label: curr.email,
-                              },
-                          ];
-                }, []);
-                setPost({
-                    title: postValues.title,
-                    body: postValues.body,
-                    category: postValues.category._id,
-                    categoryName: '',
-                    categoryDescription: '',
-                    img: postValues.img,
-                    users: selectedUsers,
+            axios
+                .get(`${process.env.REACT_APP_API}/api/posts/${id}`)
+                .then((res) => {
+                    const postValues = res.data.Post;
+                    const selectedUsers = postValues.author.reduce(
+                        (prev, curr) => {
+                            return currentUser.user._id == curr._id
+                                ? [...prev]
+                                : [
+                                      ...prev,
+                                      {
+                                          value: curr._id,
+                                          label: curr.email,
+                                      },
+                                  ];
+                        },
+                        []
+                    );
+                    setPost({
+                        title: postValues.title,
+                        body: postValues.body,
+                        category: postValues.category._id,
+                        categoryName: '',
+                        categoryDescription: '',
+                        img: postValues.img,
+                        users: selectedUsers,
+                    });
+                    formik.setFieldValue('title', post.title, false);
+                    formik.setFieldValue('body', post.body, false);
+                    formik.setFieldValue('category', post.category._id, false);
+                    formik.setFieldValue('img', post.img, false);
                 });
-                formik.setFieldValue('title', post.title, false);
-                formik.setFieldValue('body', post.body, false);
-                formik.setFieldValue('category', post.category._id, false);
-                formik.setFieldValue('img', post.img, false);
-            });
         }
     }, [id]);
     const validate = (values) => {
@@ -131,7 +138,7 @@ const NewEditPost = ({ admin = false }) => {
             }, []);
             await axios
                 .put(
-                    'http://localhost:3000/api/posts/' + id,
+                    `${process.env.REACT_APP_API}/api/posts/${id}`,
                     {
                         title: values.title,
                         body: values.body,
@@ -169,7 +176,7 @@ const NewEditPost = ({ admin = false }) => {
     const createCategory = async (values, setSubmitting) => {
         await axios
             .post(
-                'http://localhost:3000/api/category/new',
+                `${process.env.REACT_APP_API}/api/category/new`,
                 {
                     name: values.categoryName,
                     description: values.categoryDescription,
@@ -203,7 +210,7 @@ const NewEditPost = ({ admin = false }) => {
             }, []);
             await axios
                 .post(
-                    'http://localhost:3000/api/posts/new',
+                    `${process.env.REACT_APP_API}/api/posts/new`,
                     {
                         title: values.title,
                         body: values.body,

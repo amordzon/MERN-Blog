@@ -10,7 +10,7 @@ const Category = () => {
     const navigate = useNavigate();
     const getPostsCategory = async () => {
         await axios
-            .get('http://localhost:3000/api/category/' + slug)
+            .get(`${process.env.REACT_APP_API}/api/category/${slug}`)
             .then((response) => {
                 const category = response.data.Category;
 

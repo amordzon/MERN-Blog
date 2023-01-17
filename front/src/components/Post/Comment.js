@@ -9,13 +9,13 @@ const Comment = ({ comment = {}, userId, removeComment, editComm }) => {
                 <div className="flex items-center">
                     <p className="inline-flex items-center mr-3 text-sm text-gray-900">
                         <div className="w-5 h-5 mr-2 mx-auto bg-blue-500 rounded-full"></div>
-                        {comment.user.name} {comment.user.surname}
+                        {comment.user?.name} {comment.user?.surname}
                     </p>
                     <p className="text-sm text-gray-600">
                         {Moment(comment.createdAt).format('DD-MM-YYYY')}
                     </p>
                 </div>
-                {userId == comment.user._id && (
+                {userId == comment.user?._id && (
                     <>
                         <button
                             id="dropdownComment1Button"

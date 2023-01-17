@@ -9,7 +9,7 @@ const Others = () => {
     useEffect(() => {
         const getAllPosts = async () => {
             await axios
-                .get('http://localhost:3000/api/category')
+                .get(`${process.env.REACT_APP_API}/api/category`)
                 .then((response) => {
                     const allCategories = response.data.Categories;
                     setCategories(allCategories);

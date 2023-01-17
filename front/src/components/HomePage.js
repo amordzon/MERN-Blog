@@ -12,7 +12,7 @@ const HomePage = () => {
         const getAllPosts = async () => {
             await axios
                 .get(
-                    'http://localhost:3000/api/posts?sortBy=createdAt&order=-1'
+                    `${process.env.REACT_APP_API}/api/posts?sortBy=createdAt&order=-1`
                 )
                 .then((response) => {
                     const allPosts = response.data.Posts;

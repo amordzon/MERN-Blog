@@ -13,8 +13,7 @@ const PopularPosts = () => {
                 .then((response) => {
                     const popPosts = response.data.Posts;
                     setPopularPosts(popPosts.slice(0, 5));
-                })
-                .catch((error) => console.log(error));
+                });
         };
         getPopularPosts();
     }, []);

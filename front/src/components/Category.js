@@ -16,9 +16,6 @@ const Category = () => {
 
                 if (category === null) navigate('/');
                 setCategoryDetails(category);
-            })
-            .catch((error) => {
-                console.log(error);
             });
     };
     useEffect(() => {

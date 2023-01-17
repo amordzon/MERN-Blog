@@ -15,9 +15,6 @@ const MyPosts = () => {
             .then((response) => {
                 const posts = response.data.Posts;
                 setMyPosts(posts);
-            })
-            .catch((error) => {
-                console.log(error);
             });
     };
     useEffect(() => {
@@ -39,7 +36,7 @@ const MyPosts = () => {
                     .delete('http://localhost:3000/api/posts/' + id, {
                         headers: authHeader(),
                     })
-                    .then((response) => {
+                    .then(() => {
                         const newPosts = myPosts.filter(
                             (post) => post._id != id
                         );
@@ -49,7 +46,6 @@ const MyPosts = () => {
                             'Your post has been deleted.',
                             'success'
                         );
-                        console.log(response);
                     })
                     .catch((error) => {
                         Swal.fire({

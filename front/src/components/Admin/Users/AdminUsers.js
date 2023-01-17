@@ -14,10 +14,8 @@ const AdminUsers = () => {
                 .get('http://localhost:3000/api/users')
                 .then((response) => {
                     const allUsers = response.data.Users;
-                    console.log(allUsers);
                     setUsers(allUsers);
-                })
-                .catch((error) => console.log(error));
+                });
         };
 
         getAllUsers();
@@ -38,7 +36,7 @@ const AdminUsers = () => {
                     .delete('http://localhost:3000/api/users/' + id, {
                         headers: authHeader(),
                     })
-                    .then((response) => {
+                    .then(() => {
                         const newUsers = users.filter((user) => user._id != id);
                         setUsers(newUsers);
                         Swal.fire(
@@ -46,7 +44,6 @@ const AdminUsers = () => {
                             'User has been deleted.',
                             'success'
                         );
-                        console.log(response);
                     })
                     .catch((error) => {
                         Swal.fire({

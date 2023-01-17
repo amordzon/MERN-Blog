@@ -354,7 +354,6 @@ export const ratePost = async (req, res) => {
             }
         });
     } catch (e) {
-        console.log(e);
         res.status(500).json({
             success: false,
             message: 'Server error. Please try again.',

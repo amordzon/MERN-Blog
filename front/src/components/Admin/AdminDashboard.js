@@ -18,9 +18,6 @@ const AdminDashboard = () => {
             .then((response) => {
                 const stat = response.data.Statistics;
                 setStatistics(stat);
-            })
-            .catch((error) => {
-                console.log(error);
             });
     };
     useEffect(() => {

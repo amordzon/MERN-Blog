@@ -62,7 +62,6 @@ const Comments = ({ comments = [], id = '' }) => {
         ));
     }, [comm]);
     useLayoutEffect(() => {
-        console.log(comments);
         if (comm.length == 0) {
             setComm(comments);
         }

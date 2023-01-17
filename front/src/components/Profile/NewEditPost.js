@@ -29,7 +29,6 @@ const NewEditPost = ({ admin = false }) => {
 
     const [categories, setCategories] = useState([]);
     useEffect(() => {
-        console.log(12223);
         setPost({
             title: '',
             body: '',
@@ -39,33 +38,25 @@ const NewEditPost = ({ admin = false }) => {
             img: '',
             users: [],
         });
-        axios
-            .get('http://localhost:3000/api/users')
-            .then(function (response) {
-                const allUsers = response.data.Users;
-                const allUsersReduce = allUsers.reduce((prev, curr) => {
-                    return [
-                        ...prev,
-                        {
-                            value: curr._id,
-                            label: curr.email,
-                        },
-                    ];
-                }, []);
-                setUsersOptions(allUsersReduce);
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+        axios.get('http://localhost:3000/api/users').then(function (response) {
+            const allUsers = response.data.Users;
+            const allUsersReduce = allUsers.reduce((prev, curr) => {
+                return [
+                    ...prev,
+                    {
+                        value: curr._id,
+                        label: curr.email,
+                    },
+                ];
+            }, []);
+            setUsersOptions(allUsersReduce);
+        });
 
         axios
             .get('http://localhost:3000/api/category')
             .then(function (response) {
                 const allCategories = response.data.Categories;
                 setCategories(allCategories);
-            })
-            .catch(function (error) {
-                console.log(error);
             });
         if (isAddMode == false) {
             axios.get('http://localhost:3000/api/posts/' + id).then((res) => {
@@ -90,7 +81,6 @@ const NewEditPost = ({ admin = false }) => {
                     img: postValues.img,
                     users: selectedUsers,
                 });
-                console.log(res.data);
                 formik.setFieldValue('title', post.title, false);
                 formik.setFieldValue('body', post.body, false);
                 formik.setFieldValue('category', post.category._id, false);
@@ -123,7 +113,6 @@ const NewEditPost = ({ admin = false }) => {
         enableReinitialize: true,
         validate,
         onSubmit: async (values, { setSubmitting, resetForm }) => {
-            console.log(values);
             if (isAddMode) {
                 createPost(values, resetForm, setSubmitting);
             } else {
@@ -193,10 +182,8 @@ const NewEditPost = ({ admin = false }) => {
                 values.category = response.data.Category._id;
                 values.categoryName = '';
                 values.categoryDescription = '';
-                console.log(values);
             })
             .catch(function (error) {
-                console.log(error);
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
@@ -210,7 +197,6 @@ const NewEditPost = ({ admin = false }) => {
         if (diffCategory) {
             await createCategory(values, setSubmitting);
         }
-        console.log(values);
         if (values.categoryName == '' && values.categoryDescription == '') {
             const usersReduced = formik.values.users.reduce((prev, curr) => {
                 return [...prev, curr.value];

@@ -30,7 +30,6 @@ const SearchPage = () => {
                 })
             );
         });
-        console.log(filtPosts);
         setFilteredPosts(filtPosts);
     }, [searchedText]);
 

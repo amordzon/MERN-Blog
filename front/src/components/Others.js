@@ -13,10 +13,7 @@ const Others = () => {
                 .then((response) => {
                     const allCategories = response.data.Categories;
                     setCategories(allCategories);
-                    console.log(allCategories);
-                    console.log(categories);
-                })
-                .catch((error) => console.log(error));
+                });
         };
         getAllPosts();
     }, []);

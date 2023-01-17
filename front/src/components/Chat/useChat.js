@@ -13,7 +13,6 @@ const useChat = (user) => {
     useEffect(() => {
         socketRef.current = socketIOClient(SOCKET_SERVER_URL);
         socketRef.current.on(GET_CHAT_MESSAGES_EVENT, (messages) => {
-            console.log(messages);
             const messagesReduced = messages.reduce((prev, curr) => {
                 return [
                     ...prev,
@@ -31,7 +30,6 @@ const useChat = (user) => {
         });
 
         socketRef.current.on(NEW_CHAT_MESSAGE_EVENT, (message) => {
-            console.log(message);
             const incomingMessage = {
                 ...message,
                 ownedByCurrentUser: message.senderId === socketRef.current.id,

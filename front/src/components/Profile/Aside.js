@@ -15,7 +15,6 @@ const Aside = () => {
         dispatch(loggedOut());
         navigate('/');
     };
-    console.log(isLogged);
     if (!isLogged) {
         return <Navigate to="/auth" />;
     }

@@ -39,7 +39,6 @@ const AdminAddEditUsers = () => {
                     confirmpassword: '',
                     role: userValues.role,
                 });
-                console.log(res.data);
                 formik.setFieldValue('email', initUserVal.email, false);
                 formik.setFieldValue('name', initUserVal.name, false);
                 formik.setFieldValue('surname', initUserVal.surname, false);
@@ -126,7 +125,6 @@ const AdminAddEditUsers = () => {
                         setSubmitting(false);
                     })
                     .catch(function (error) {
-                        console.log(error);
                         Swal.fire({
                             icon: 'error',
                             title: 'Oops...',
@@ -159,7 +157,6 @@ const AdminAddEditUsers = () => {
                         setSubmitting(false);
                     })
                     .catch(function (error) {
-                        console.log(error);
                         Swal.fire({
                             icon: 'error',
                             title: 'Oops...',

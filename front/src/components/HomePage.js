@@ -17,8 +17,7 @@ const HomePage = () => {
                 .then((response) => {
                     const allPosts = response.data.Posts;
                     dispatch(setBlogPosts(allPosts));
-                })
-                .catch((error) => console.log(error));
+                });
         };
 
         getAllPosts();

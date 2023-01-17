@@ -39,8 +39,7 @@ const Post = () => {
                     setCurrentRating(ratUser[0]?.score);
                     const ratingResult = reducerat(response.data.Rating);
                     setRating(ratingResult);
-                })
-                .catch((error) => console.log(error));
+                });
         };
         getPost();
     }, [id]);

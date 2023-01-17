@@ -70,21 +70,6 @@ export const updateComment = async (req, res) => {
     const id = req.params.commentid;
     const updateObject = req.body;
     const author = req.user;
-    // await Comment.update({ _id: id }, { $set: updateObject })
-    //     .exec()
-    //     .then(() => {
-    //         res.status(200).json({
-    //             success: true,
-    //             message: 'Comment is updated',
-    //             updatePost: updateObject,
-    //         });
-    //     })
-    //     .catch((err) => {
-    //         res.status(500).json({
-    //             success: false,
-    //             message: 'Server error. Please try again.',
-    //         });
-    //     });
     await Comment.findById(id)
         .then((comment) => {
             if (comment.user == author) {

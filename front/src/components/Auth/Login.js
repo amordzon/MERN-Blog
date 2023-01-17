@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { loggedIn } from '../../slices/authSlice';
 import { login } from '../../services/auth.service';
 
-const Login = ({ isLogin }) => {
+const Login = ({ isLogin, admin = false }) => {
     let navigate = useNavigate();
     const dispatch = useDispatch();
     const [message, setMessage] = useState('');
@@ -32,9 +32,20 @@ const Login = ({ isLogin }) => {
         onSubmit: (values, { setSubmitting }) => {
             login(values.email, values.password)
                 .then((response) => {
-                    dispatch(loggedIn(response.User));
-                    navigate('/profile/myposts');
-                    setSubmitting(false);
+                    if (admin) {
+                        if (response.User.user.role == 'admin') {
+                            dispatch(loggedIn(response.User));
+                            navigate('/admin/dashboard');
+
+                            setSubmitting(false);
+                        } else {
+                            setMessage('You are not an admin!');
+                        }
+                    } else {
+                        dispatch(loggedIn(response.User));
+                        navigate('/profile/myposts');
+                        setSubmitting(false);
+                    }
                 })
                 .catch((error) => {
                     setMessage(() => error.response.data.message);
@@ -48,7 +59,9 @@ const Login = ({ isLogin }) => {
                 <div className="w-full bg-white rounded-lg shadow-xl md:mt-0 sm:max-w-md xl:p-0 ">
                     <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                         <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
-                            Sign in to your account
+                            {admin
+                                ? 'Sign in to admin panel'
+                                : 'Sign in to your account'}
                         </h1>
 
                         {message && (
@@ -116,16 +129,19 @@ const Login = ({ isLogin }) => {
                             >
                                 Sign in
                             </button>
-                            <p className="text-sm font-light text-gray-500">
-                                Dont have an account yet?{' '}
-                                <a
-                                    href="#"
-                                    className="font-medium text-primary-600 hover:underline"
-                                    onClick={() => isLogin(false)}
-                                >
-                                    Sign up
-                                </a>
-                            </p>
+
+                            {!admin && (
+                                <p className="text-sm font-light text-gray-500">
+                                    Dont have an account yet?{' '}
+                                    <a
+                                        href="#"
+                                        className="font-medium text-primary-600 hover:underline"
+                                        onClick={() => isLogin(false)}
+                                    >
+                                        Sign up
+                                    </a>
+                                </p>
+                            )}
                         </form>
                     </div>
                 </div>

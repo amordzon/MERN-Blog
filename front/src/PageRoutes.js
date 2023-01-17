@@ -10,11 +10,36 @@ import MyPosts from './components/Profile/MyPosts';
 import Aside from './components/Profile/Aside';
 import NewEditPost from './components/Profile/NewEditPost';
 import SearchPage from './components/SearchPage';
+import AdminSide from './components/Admin/AdminSide';
+import AdminLogin from './components/Admin/AdminLogin';
+import AdminDashboard from './components/Admin/AdminDashboard';
+import AdminPosts from './components/Admin/Posts/AdminPosts';
+import AdminUsers from './components/Admin/Users/AdminUsers';
+import AdminAddEditUsers from './components/Admin/Users/AdminAddEditUsers';
 
 const PageRoutes = () => {
     return (
         <>
             <Routes>
+                <Route path="admin" element={<AdminSide />}>
+                    <Route path="login" element={<AdminLogin />} />
+                    <Route path="dashboard" element={<AdminDashboard />} />
+                    <Route path="posts" element={<AdminPosts />} />
+                    <Route
+                        path="newpost"
+                        element={<NewEditPost admin={true} />}
+                    />
+                    <Route
+                        path="editpost/:id"
+                        element={<NewEditPost admin={true} />}
+                    />
+                    <Route path="users" element={<AdminUsers />} />
+                    <Route path="newuser" element={<AdminAddEditUsers />} />
+                    <Route
+                        path="edituser/:id"
+                        element={<AdminAddEditUsers />}
+                    />
+                </Route>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/category/:slug" element={<Category />} />
                 <Route path="/others" element={<Others />} />

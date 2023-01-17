@@ -200,16 +200,31 @@ export const updatePost = async (req, res) => {
         : [author];
 
     delete updateObject.users;
-    await Post.update({ _id: id }, { $set: updateObject })
-        .exec()
-        .then(() => {
-            res.status(200).json({
-                success: true,
-                message: 'Post is updated',
-                updatePost: updateObject,
-            });
+    await Post.findById(id)
+        .then((post) => {
+            if (post.author.includes(author) || req.role == 'admin') {
+                post.updateOne({ $set: updateObject })
+                    .then(() => {
+                        res.status(200).json({
+                            success: true,
+                            message: 'Post is updated',
+                            updatePost: updateObject,
+                        });
+                    })
+                    .catch(() => {
+                        res.status(500).json({
+                            success: false,
+                            message: 'Server error. Please try again.',
+                        });
+                    });
+            } else {
+                res.status(500).json({
+                    success: false,
+                    message: 'Unauthorized action!',
+                });
+            }
         })
-        .catch((err) => {
+        .catch(() => {
             res.status(500).json({
                 success: false,
                 message: 'Server error. Please try again.',
@@ -222,7 +237,7 @@ export const deletePost = async (req, res) => {
     const userId = req.user;
     await Post.findById(id)
         .then((post) => {
-            if (post.author.includes(userId)) {
+            if (post.author.includes(userId) || req.role == 'admin') {
                 post.remove()
                     .then(() =>
                         res.status(204).json({

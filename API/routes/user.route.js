@@ -5,15 +5,17 @@ import {
     getOneUser,
     updateUserWithToken,
     deleteUser,
+    updateUser,
 } from '../controllers/user.controller.js';
-import { loggedIn } from '../middleware/auth.middleware.js';
+import { loggedIn, adminAuth } from '../middleware/auth.middleware.js';
 
 const userRouter = express.Router();
 
 userRouter.get('/', getAllUsers);
-userRouter.post('/new', createUser);
+userRouter.post('/new', adminAuth, createUser);
 userRouter.get('/:userid', getOneUser);
+userRouter.put('/:userid', adminAuth, updateUser);
 userRouter.put('/updatewithtoken', loggedIn, updateUserWithToken);
-userRouter.delete('/:userid', deleteUser);
+userRouter.delete('/:userid', adminAuth, deleteUser);
 
 export default userRouter;

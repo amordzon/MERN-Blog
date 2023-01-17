@@ -78,7 +78,6 @@ export const createUser = async (req, res) => {
 
 export const updateUser = async (req, res) => {
     const id = req.params.userid;
-
     const val = req.body.password
         ? {
               password: await bcrypt.hash(req.body.password, 10),

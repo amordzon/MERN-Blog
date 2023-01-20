@@ -43,13 +43,15 @@ const NewEditPost = ({ admin = false }) => {
             .then(function (response) {
                 const allUsers = response.data.Users;
                 const allUsersReduce = allUsers.reduce((prev, curr) => {
-                    return [
-                        ...prev,
-                        {
-                            value: curr._id,
-                            label: curr.email,
-                        },
-                    ];
+                    return curr._id != currentUser.user._id
+                        ? [
+                              ...prev,
+                              {
+                                  value: curr._id,
+                                  label: curr.email,
+                              },
+                          ]
+                        : [...prev];
                 }, []);
                 setUsersOptions(allUsersReduce);
             });

@@ -16,6 +16,7 @@ import AdminDashboard from './components/Admin/AdminDashboard';
 import AdminPosts from './components/Admin/Posts/AdminPosts';
 import AdminUsers from './components/Admin/Users/AdminUsers';
 import AdminAddEditUsers from './components/Admin/Users/AdminAddEditUsers';
+import AdminCsv from './components/Admin/Csv/AdminCsv';
 
 const PageRoutes = () => {
     return (
@@ -39,6 +40,7 @@ const PageRoutes = () => {
                         path="edituser/:id"
                         element={<AdminAddEditUsers />}
                     />
+                    <Route path="csv" element={<AdminCsv />} />
                 </Route>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/category/:slug" element={<Category />} />

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Moment from 'moment';
 
-const Comment = ({ comment = {}, userId, removeComment, editComm }) => {
+const Comment = ({ comment = {}, user, removeComment, editComm }) => {
     const [menuShow, setMenuShow] = useState(false);
     return (
         <article className=" relative p-6 mb-6 text-base bg-white rounded-lg border-b-2">
@@ -15,7 +15,7 @@ const Comment = ({ comment = {}, userId, removeComment, editComm }) => {
                         {Moment(comment.createdAt).format('DD-MM-YYYY')}
                     </p>
                 </div>
-                {userId == comment.user?._id && (
+                {(user?._id == comment.user?._id || user?.role == 'admin') && (
                     <>
                         <button
                             id="dropdownComment1Button"
@@ -43,14 +43,16 @@ const Comment = ({ comment = {}, userId, removeComment, editComm }) => {
                             }
                         >
                             <ul className="py-1 text-sm text-gray-700 shadow">
-                                <li>
-                                    <a
-                                        onClick={() => editComm(comment)}
-                                        className="block py-2 px-4 hover:bg-gray-100"
-                                    >
-                                        Edit
-                                    </a>
-                                </li>
+                                {user?._id == comment.user?._id && (
+                                    <li>
+                                        <a
+                                            onClick={() => editComm(comment)}
+                                            className="block py-2 px-4 hover:bg-gray-100"
+                                        >
+                                            Edit
+                                        </a>
+                                    </li>
+                                )}
                                 <li>
                                     <a
                                         onClick={() =>

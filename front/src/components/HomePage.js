@@ -24,7 +24,7 @@ const HomePage = () => {
     }, []);
 
     return (
-        <div className="lg:flex-none xl:w-4/5 lg:w-3/4 py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-4">
+        <div className="lg:flex-none lg:w-3/4 py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-4">
             <Summary
                 header={'Our Blog'}
                 description={

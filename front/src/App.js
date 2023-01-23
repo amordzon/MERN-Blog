@@ -21,7 +21,7 @@ function App() {
                         <div className="lg:flex">
                             <PageRoutes />
                             {pathname != '/auth' && !admin && !noSide && (
-                                <div className="lg:flex-none xl:w-1/5 lg:w-1/4">
+                                <div className="lg:flex-none xl:w-1/5 lg:w-1/4 pr-4">
                                     <AboutMe />
                                     <Chat />
                                     <PopularPosts />

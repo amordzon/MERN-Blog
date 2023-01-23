@@ -184,8 +184,9 @@ export const updateUserWithToken = async (req, res) => {
 
 export const deleteUser = async (req, res) => {
     const id = req.params.userid;
-    await User.findByIdAndRemove(id)
-        .exec()
+    const user = await User.findOne({ _id: id });
+    await user
+        .deleteOne()
         .then(() =>
             res.status(204).json({
                 success: true,

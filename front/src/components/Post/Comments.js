@@ -55,7 +55,7 @@ const Comments = ({ comments = [], id = '' }) => {
             <Comment
                 comment={comment}
                 key={index}
-                userId={currentUser?.user._id}
+                user={currentUser?.user}
                 removeComment={removeComment}
                 editComm={editComm}
             />

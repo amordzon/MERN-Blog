@@ -106,7 +106,7 @@ export const deleteComment = async (req, res) => {
     const id = req.params.commentid;
     await Comment.findById(id)
         .then((comment) => {
-            if (comment.user == author) {
+            if (comment.user == author || req.role == 'admin') {
                 comment
                     .remove()
                     .then(() =>

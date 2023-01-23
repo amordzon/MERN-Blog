@@ -57,7 +57,7 @@ const Post = ({ post, myPosts, handleDelete }) => {
                     {Moment(post.createdAt).format('DD-MM-YYYY')}
                 </span>
             </div>
-            <img className="w-full max-h-[32rem] " src={post.img} />
+            <img className="w-full max-h-[52rem] " src={post.img} />
             <h2 className="mb-2 mt-4 text-2xl font-bold tracking-tight text-gray-900">
                 <Link to={`/post/${post._id}`}>{post.title}</Link>
             </h2>

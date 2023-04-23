@@ -90,7 +90,7 @@ const Post = () => {
                         </div>
 
                         <img
-                            src={post.img}
+                            src={post.img?.imageUrl}
                             className="w-full max-h-[32rem] mb-6"
                         />
                         <Article body={post.body} />

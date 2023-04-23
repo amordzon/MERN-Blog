@@ -458,8 +458,8 @@ const NewEditPost = ({ admin = false }) => {
                                 </div>
                             </div>
                             <img
-                                src={formik.values.img}
-                                alt={formik.values.img.name}
+                                src={formik.values.img.imageUrl}
+                                alt={formik.values.img.imageUrl}
                             />
 
                             {formik.errors.img ? (

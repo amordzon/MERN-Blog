@@ -21,8 +21,12 @@ const PostSchema = new mongoose.Schema(
             },
         ],
         img: {
-            type: String,
-            required: true,
+            imageUrl: {
+                type: String,
+            },
+            publicId: {
+                type: String,
+            },
         },
         category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' },
     },

@@ -1,5 +1,9 @@
 import mongoose from 'mongoose';
 import Post from '../models/post.model.js';
+import {
+    removeFromCloudinary,
+    uploadToCloudinary,
+} from '../services/cloudinary.services.js';
 
 export const getAllPosts = async (req, res) => {
     const sortBy = req.query.sortBy;
@@ -150,20 +154,23 @@ export const getMyPosts = async (req, res) => {
         });
 };
 
-export const createPost = (req, res) => {
+export const createPost = async (req, res) => {
     const author = req.user;
     const users = req.body.users ? [author, ...req.body.users] : [author];
+    const data = await uploadToCloudinary(req.file.path, 'posts-images');
+    if (data == null) {
+        return res.status(500).json({
+            success: false,
+            message: 'Server error. Please try again.',
+            error: 'Server error. Please try again.',
+        });
+    }
     const post = new Post({
         _id: mongoose.Types.ObjectId(),
         author: users,
         title: req.body.title,
         body: req.body.body,
-        img:
-            req.protocol +
-            '://' +
-            req.get('host') +
-            '/uploads/' +
-            req.file.filename,
+        img: { imageUrl: data.url, publicId: data.public_id },
         category: req.body.category,
     });
     return post
@@ -188,13 +195,17 @@ export const updatePost = async (req, res) => {
     const author = req.user;
     const id = req.params.postid;
     let updateObject = req.body;
-    updateObject.img = updateObject.img
-        ? updateObject.img
-        : req.protocol +
-          '://' +
-          req.get('host') +
-          '/uploads/' +
-          req.file.filename;
+    if (req.file != null) {
+        const data = await uploadToCloudinary(req.file.path, 'posts-images');
+        if (data == null) {
+            return res.status(500).json({
+                success: false,
+                message: 'Server error. Please try again.',
+                error: 'Server error. Please try again.',
+            });
+        }
+        updateObject.img = { imageUrl: data.url, publicId: data.public_id };
+    }
     updateObject.author = updateObject.users
         ? [author, ...updateObject.users]
         : [author];
@@ -236,8 +247,20 @@ export const deletePost = async (req, res) => {
     const id = req.params.postid;
     const userId = req.user;
     await Post.findById(id)
-        .then((post) => {
+        .then(async (post) => {
             if (post.author.includes(userId) || req.role == 'admin') {
+                if (post.img.imageUrl) {
+                    const message = await removeFromCloudinary(
+                        post.img.publicId
+                    );
+                    if (message == null) {
+                        return res.status(500).json({
+                            success: false,
+                            message: 'Server error. Please try again.',
+                            error: 'Server error. Please try again.',
+                        });
+                    }
+                }
                 post.remove()
                     .then(() =>
                         res.status(204).json({

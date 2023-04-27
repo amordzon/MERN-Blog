@@ -22,6 +22,37 @@ const AdminPosts = () => {
 
         getAllPosts();
     }, []);
+
+    const approveDisapprovePost = async (id) => {
+        await axios
+            .put(
+                `${process.env.REACT_APP_API}/api/posts/changevisibility/${id}`,
+                {},
+                {
+                    headers: authHeader(),
+                }
+            )
+            .then((response) => {
+                const newPosts = blogPosts.map((post) =>
+                    post.id == id
+                        ? { ...post, approved: response.data.Post.approved }
+                        : post
+                );
+                dispatch(setBlogPosts(newPosts));
+                Swal.fire(
+                    'Visibility changed!',
+                    "Post's visibility changed.",
+                    'success'
+                );
+            })
+            .catch((error) => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: error.response.data.message,
+                });
+            });
+    };
     const deletePost = async (id) => {
         Swal.fire({
             title: 'Are you sure?',
@@ -124,6 +155,33 @@ const AdminPosts = () => {
                                     <td className="px-6 py-4">
                                         {Moment(post.createdAt).format(
                                             'DD-MM-YYYY'
+                                        )}
+                                    </td>
+                                    <td className="px-6 py-4 text-right">
+                                        {post.approved ? (
+                                            <button
+                                                onClick={() =>
+                                                    approveDisapprovePost(
+                                                        post._id
+                                                    )
+                                                }
+                                                title="Disapprove post"
+                                                className="font-medium text-red-600 hover:text-red-800"
+                                            >
+                                                <i className="fa-solid fa-xmark"></i>
+                                            </button>
+                                        ) : (
+                                            <button
+                                                onClick={() =>
+                                                    approveDisapprovePost(
+                                                        post._id
+                                                    )
+                                                }
+                                                title="Approve post"
+                                                className="font-medium text-green-600 hover:text-green-800"
+                                            >
+                                                <i className="fa fa-check"></i>
+                                            </button>
                                         )}
                                     </td>
                                     <td className="px-6 py-4 text-right">

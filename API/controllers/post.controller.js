@@ -13,6 +13,9 @@ export const getAllPosts = async (req, res) => {
         if (sortBy == 'ratings') {
             const aggregatorOpts = [
                 {
+                    $match: { approved: true },
+                },
+                {
                     $project: {
                         title: 1,
                         ratings: 1,
@@ -382,4 +385,29 @@ export const ratePost = async (req, res) => {
             message: 'Server error. Please try again.',
         });
     }
+};
+
+export const approveDisapprovePost = async (req, res) => {
+    const id = req.params.postid;
+    console.log(id);
+    await Post.findOneAndUpdate(
+        { _id: id },
+        [{ $set: { approved: { $eq: [false, '$approved'] } } }],
+        { new: true }
+    )
+        .then((updatedPost) => {
+            console.log(updatedPost);
+            res.status(200).json({
+                success: true,
+                message: 'Success',
+                Post: updatedPost,
+            });
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).json({
+                success: false,
+                message: 'Server error. Please try again.',
+            });
+        });
 };

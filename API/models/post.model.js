@@ -29,6 +29,10 @@ const PostSchema = new mongoose.Schema(
             },
         },
         category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' },
+        approved: {
+            type: Boolean,
+            default: false,
+        },
     },
     {
         timestamps: true,

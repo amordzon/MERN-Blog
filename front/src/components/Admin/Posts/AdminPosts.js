@@ -41,7 +41,7 @@ const AdminPosts = () => {
                 dispatch(setBlogPosts(newPosts));
                 Swal.fire(
                     'Visibility changed!',
-                    "Post's visibility changed.",
+                    'Post visibility changed.',
                     'success'
                 );
             })

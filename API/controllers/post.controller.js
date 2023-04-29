@@ -181,7 +181,7 @@ export const createPost = async (req, res) => {
         .then((newPost) => {
             return res.status(201).json({
                 success: true,
-                message: 'New post created successfully',
+                message: 'New post created and send for approval to admin!',
                 Post: newPost,
             });
         })

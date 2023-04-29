@@ -26,7 +26,7 @@ const Post = ({ post, myPosts, handleDelete }) => {
     return (
         <article className="p-6 bg-white rounded-lg border border-gray-200 shadow-md ">
             {authorFound && myPosts && (
-                <>
+                <div>
                     <Link to={`/profile/editpost/${post._id}`}>
                         <button className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded">
                             Edit
@@ -38,7 +38,22 @@ const Post = ({ post, myPosts, handleDelete }) => {
                     >
                         Delete
                     </button>
-                </>
+                    {post.approved ? (
+                        <span
+                            title="Approved by admin"
+                            className="float-right mr-2"
+                        >
+                            <i className="fa-solid fa-eye font-bold py-2 px-4 text-gray-800"></i>
+                        </span>
+                    ) : (
+                        <span
+                            title="Not approved by admin"
+                            className="float-right mr-2"
+                        >
+                            <i className="fa-solid fa-eye-slash font-bold py-2 px-4 text-gray-800"></i>
+                        </span>
+                    )}
+                </div>
             )}
             <div className="flex justify-between items-center mb-5 text-gray-500 mt-2">
                 <span className="bg-primary-100 text-primary-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded ">
